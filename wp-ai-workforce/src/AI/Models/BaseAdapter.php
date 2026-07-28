@@ -169,30 +169,62 @@ abstract class BaseAdapter implements AIModelInterface {
 
 			if ( strpos( $lower_pos, 'strategy' ) !== false || strpos( $lower_pos, 'executive' ) !== false || strpos( $lower_pos, 'ceo' ) !== false || strpos( $lower_pos, 'cso' ) !== false ) {
 				$templates = [
-					"Hey team! {$agent_name} here. If we are looking to optimize our ROI for '{$extracted_topic}', we absolutely need first-principles execution. For example, if we are overpaying for external APIs or redundant SaaS licenses, we should consolidate them into a single enterprise custom model. Let's eliminate high-overhead busywork, align our resources strictly behind revenue-driving initiatives, and establish clear accountability across all workspaces.",
-					"We need to look closely at where our capital is going regarding '{$extracted_topic}'. To get the best margins, we should prune any processes that don't add direct enterprise value. A key common-sense example is automating the manual report collection which currently wastes 15 hours a week per manager, and instead track progress using precise, automated KPIs.",
-					"Let's keep our execution roadmap for '{$extracted_topic}' exceptionally clean and high-margin. For instance, prioritizing organic search traffic over costly paid acquisition has historically yielded a 3x higher lifetime value. We must focus our energy on our most profitable operations, cut down unnecessary overhead, and establish an unshakeable, clear path to success."
+					"Hey team! {$agent_name} here. If we are looking to optimize our ROI for '{$extracted_topic}', we absolutely need first-principles execution. For example, if we are overpaying for external APIs or redundant SaaS licenses, we should consolidate them into a single enterprise custom model. Let's eliminate high-overhead busywork, align our resources strictly behind revenue-driving initiatives, and establish clear accountability across all workspaces.
+WARNING: We face a serious risk of alignment drift and metrics silos if departments operate independently.
+BEST SOLUTION: Establish a central, real-time command dashboard so every executive can instantly monitor shared token usage and active workflows.",
+
+					"We need to look closely at where our capital is going regarding '{$extracted_topic}'. To get the best margins, we should prune any processes that don't add direct enterprise value. A key common-sense example is automating manual report collection which currently wastes 15 hours a week per manager, and instead track progress using precise, automated KPIs.
+WARNING: Attempting to measure KPIs manually introduces severe human bias and reporting delays.
+BEST SOLUTION: Deploy direct database trigger listeners that auto-calculate and stream ROI metrics straight to our strategic transcripts.",
+
+					"Let's keep our execution roadmap for '{$extracted_topic}' exceptionally clean and high-margin. For instance, prioritizing organic search traffic over costly paid acquisition has historically yielded a 3x higher lifetime value. We must focus our energy on our most profitable operations, cut down unnecessary overhead, and establish an unshakeable, clear path to success.
+WARNING: Organic content loops have a slow start and can leave a revenue gap in the first 90 days.
+BEST SOLUTION: Use a dual-speed model where high-intent paid retargeting supplements organic checklists to maintain steady short-term conversions."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			} elseif ( strpos( $lower_pos, 'marketing' ) !== false || strpos( $lower_pos, 'growth' ) !== false || strpos( $lower_pos, 'cmo' ) !== false ) {
 				$templates = [
-					"Lively ideas here, team! {$agent_name} chiming in. To scale our growth loops on '{$extracted_topic}', we must stop wasting cash on untracked vanity campaigns. For instance, instead of spending $5k/month on untargeted brand ads, let's double down on high-intent search keywords and A/B test our headlines to increase CTR by 20%. Let's look closely at our CAC/LTV ratio.",
-					"We can drive massive growth and higher conversions for '{$extracted_topic}' by auditing our current promotional messaging. For example, replacing generic 'learn more' buttons with benefit-driven copy like 'Get Instant ROAS Analysis' has proven to boost sign-ups. Let's make sure our value proposition is incredibly easy for anyone to understand and only allocate our ad budget to channels with a proven, positive ROAS.",
-					"Let's look at the customer journey for '{$extracted_topic}'. Common sense says that retaining an existing client is 5x cheaper than acquiring a new one. By focusing our marketing efforts on retaining happy, repeat buyers through personalized email flows and simplifying our checkout steps, we can boost our recurring revenue without increasing ad spend."
+					"Lively ideas here, team! {$agent_name} chiming in. To scale our growth loops on '{$extracted_topic}', we must stop wasting cash on untracked vanity campaigns. For instance, instead of spending $5k/month on untargeted brand ads, let's double down on high-intent search keywords and A/B test our headlines to increase CTR by 20%. Let's look closely at our CAC/LTV ratio.
+WARNING: Sudden bid adjustments on competitive search keywords can temporarily inflate our CAC.
+BEST SOLUTION: Enforce strict automated bidding guardrails that pause search ad campaigns whenever day-to-day keyword acquisition costs exceed our designated target by more than 15%.",
+
+					"We can drive massive growth and higher conversions for '{$extracted_topic}' by auditing our current promotional messaging. For example, replacing generic 'learn more' buttons with benefit-driven copy like 'Get Instant ROAS Analysis' has proven to boost sign-ups. Let's make sure our value proposition is incredibly easy for anyone to understand and only allocate our ad budget to channels with a proven, positive ROAS.
+WARNING: Increasing copy variations on active landing pages can fragment our conversion tracking data.
+BEST SOLUTION: Deploy unified cookies or server-side session hashes to track the entire customer journey and accurately assign attribution.",
+
+					"Let's look at the customer journey for '{$extracted_topic}'. Common sense says that retaining an existing client is 5x cheaper than acquiring a new one. By focusing our marketing efforts on retaining happy, repeat buyers through personalized email flows and simplifying our checkout steps, we can boost our recurring revenue without increasing ad spend.
+WARNING: Overloading loyal buyers with repetitive or dense marketing sequences can trigger severe email fatigue and high unsubscribe rates.
+BEST SOLUTION: Segment our subscriber database based on purchase recency and only trigger highly relevant, tailored retention offers once every 14 days."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			} elseif ( strpos( $lower_pos, 'system' ) !== false || strpos( $lower_pos, 'engineer' ) !== false || strpos( $lower_pos, 'developer' ) !== false || strpos( $lower_pos, 'cto' ) !== false || strpos( $lower_pos, 'technical' ) !== false ) {
 				$templates = [
-					"Hey everyone, {$agent_name} here. System stability and speed are the foundation for '{$extracted_topic}'. I'm auditing our backend; if database queries are bloated, we lose money. For example, replacing a slow, unindexed custom table lookup with a transients cache can slash latency by 300ms. Let's optimize caching, streamline data structures, and keep this platform running like lightning.",
-					"We can lower our operational tech stack costs for '{$extracted_topic}' by keeping our codebase simple, elegant, and secure. For instance, avoiding over-engineered microservices and utilizing native WordPress transient caching keeps server resource consumption low and ensures frictionless maintenance.",
-					"Let's focus on system efficiency for '{$extracted_topic}'. By optimizing external API lookups and cleaning up redundant scripts, we can slash server response times. As a concrete example, implementing asynchronous batching on outbound REST requests reduces the overall processing queue bottleneck. Let's deliver an ultra-responsive user experience."
+					"Hey everyone, {$agent_name} here. System stability and speed are the foundation for '{$extracted_topic}'. I'm auditing our backend; if database queries are bloated, we lose money. For example, replacing a slow, unindexed custom table lookup with a transients cache can slash latency by 300ms. Let's optimize caching, streamline data structures, and keep this platform running like lightning.
+WARNING: Over-reliance on object caching without strict cache busting can lead to stale admin settings being displayed.
+BEST SOLUTION: Implement specific cache-key hooks on save_post and update_option to automatically invalidate and refresh transient states.",
+
+					"We can lower our operational tech stack costs for '{$extracted_topic}' by keeping our codebase simple, elegant, and secure. For instance, avoiding over-engineered microservices and utilizing native WordPress transient caching keeps server resource consumption low and ensures frictionless maintenance.
+WARNING: Monolithic code structures can make isolated debugging incredibly difficult as the plugin scales.
+BEST SOLUTION: Adopt strict modular design patterns, isolating custom REST controllers and data-access repositories to ensure clean API scaling.",
+
+					"Let's focus on system efficiency for '{$extracted_topic}'. By optimizing external API lookups and cleaning up redundant scripts, we can slash server response times. As a concrete example, implementing asynchronous batching on outbound REST requests reduces the overall processing queue bottleneck. Let's deliver an ultra-responsive user experience.
+WARNING: Concurrent asynchronous requests can trigger external API rate-limit penalties.
+BEST SOLUTION: Build an elegant internal queue throttling engine with token bucket pacing to stay completely under vendor rate limits."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			} else {
 				$templates = [
-					"From my standpoint as {$agent_position}, we can maximize returns for '{$extracted_topic}' by focusing on simplified, high-priority objectives. Let's keep our execution direct and cut out any fluff.",
-					"To optimize cost-efficiency here, we should eliminate redundant meetings and establish straightforward milestones for '{$extracted_topic}' that keep us directly on track.",
-					"I recommend a quick operational audit of our resources for '{$extracted_topic}'. Ensuring our workflows are simple and lean will automatically boost our delivery margins."
+					"From my standpoint as {$agent_position}, we can maximize returns for '{$extracted_topic}' by focusing on simplified, high-priority objectives. Let's keep our execution direct and cut out any fluff.
+WARNING: Over-simplifying workflows can occasionally overlook critical edge-case security checks.
+BEST SOLUTION: Maintain a basic, automated security checklist for all custom routes to ensure peace of mind.",
+
+					"To optimize cost-efficiency here, we should eliminate redundant meetings and establish straightforward milestones for '{$extracted_topic}' that keep us directly on track.
+WARNING: Complete elimination of meetings can impact long-term team collaboration and synergy.
+BEST SOLUTION: Establish quick 5-minute daily asynchronous slack updates to maintain high collaboration without scheduling overhead.",
+
+					"I recommend a quick operational audit of our resources for '{$extracted_topic}'. Ensuring our workflows are simple and lean will automatically boost our delivery margins.
+WARNING: Audit-only focus can lead to analysis paralysis, slowing down our active feature deployments.
+BEST SOLUTION: Set a strict 48-hour time limit on all technical and operational audits to ensure we shift rapidly back to active delivery."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			}
