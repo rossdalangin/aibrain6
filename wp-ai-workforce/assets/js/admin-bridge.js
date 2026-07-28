@@ -203,7 +203,7 @@ function initNexusAdminBridge() {
             };
 
             if (agentId > 0) {
-                nexusFetch(`employees/${agentId}`, 'POST', { ...payload, _method: 'EDITABLE' }).then((res) => {
+                nexusFetch(`employees/${agentId}`, 'POST', { ...payload, _method: 'PUT' }).then((res) => {
                     if (res && (res.error || res.success === false)) {
                         showToast(res.message || 'Failed to update agent profile.', 'error');
                         btn.innerText = 'Update Agent Profile';
@@ -461,7 +461,7 @@ function initNexusAdminBridge() {
             const id = renameBtn.dataset.id;
             const newTitle = prompt('Enter new session title:', renameBtn.dataset.title);
             if (newTitle) {
-                nexusFetch(`conversations/${id}`, 'POST', { title: newTitle, _method: 'EDITABLE' }).then(() => {
+                nexusFetch(`conversations/${id}`, 'POST', { title: newTitle, _method: 'PUT' }).then(() => {
                     showToast('Session record updated.');
                     setTimeout(() => window.location.reload(), 1000);
                 });
@@ -991,9 +991,10 @@ function initNexusAdminBridge() {
         transcript.innerHTML += thinkingHtml;
         transcript.scrollTop = transcript.scrollHeight;
 
+        const agendaVal = document.getElementById('nexus-meeting-agenda') ? document.getElementById('nexus-meeting-agenda').value : '';
         const meetingPayload = {
             agent_id: responder.id,
-            agenda: "CHAIRMAN INTERVENTION: " + interventionText,
+            agenda: agendaVal + " CHAIRMAN INTERVENTION: " + interventionText,
             round: index + 1
         };
 

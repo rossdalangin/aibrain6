@@ -108,10 +108,19 @@ abstract class BaseAdapter implements AIModelInterface {
 			$chairman_intervention = trim( $chairman_intervention );
 		}
 
-		// Extract topic words from clean user message for smart contextual reflection
+		// Extract actual agenda content or chairman intervention content from user message for more accurate topic extraction
+		$agenda_content = '';
+		if ( preg_match( '/AGENDA:\s*(.*?)(?=\.?\s*As the)/is', $user_msg, $agenda_matches ) ) {
+			$agenda_content = trim( $agenda_matches[1] );
+		}
+
+		// If we extracted specific agenda content, use that for topic extraction. Otherwise, fall back to clean user message.
+		$topic_source = ! empty( $agenda_content ) ? $agenda_content : $clean_user_msg;
+
+		// Extract topic words from clean topic source for smart contextual reflection
 		$topic_words = [];
-		if ( preg_match_all( '/\b[a-zA-Z]{4,15}\b/', $clean_user_msg, $matches ) ) {
-			$ignored_words = [ 'with', 'this', 'that', 'your', 'from', 'have', 'would', 'should', 'could', 'about', 'there', 'their', 'them', 'then', 'here', 'some', 'please', 'think', 'step', 'final', 'answer', 'structure', 'output', 'chairman', 'intervention', 'meeting', 'round' ];
+		if ( preg_match_all( '/\b[a-zA-Z]{4,15}\b/', $topic_source, $matches ) ) {
+			$ignored_words = [ 'with', 'this', 'that', 'your', 'from', 'have', 'would', 'should', 'could', 'about', 'there', 'their', 'them', 'then', 'here', 'some', 'please', 'think', 'step', 'final', 'answer', 'structure', 'output', 'chairman', 'intervention', 'meeting', 'round', 'strategic', 'agenda', 'expert', 'opinion', 'contribution', 'goal', 'decision', 'action', 'professional', 'concise', 'focused', 'specific', 'role', 'kpis' ];
 			foreach ( $matches[0] as $word ) {
 				$l_word = strtolower($word);
 				if ( ! in_array( $l_word, $ignored_words ) && strlen($l_word) > 3 ) {
