@@ -1,0 +1,35 @@
+================================================================================
+NEXUS AI SYSTEMS: BATTLE-TESTED SEO CONTENT & KEYWORD OPTIMIZATION CHECKLIST
+================================================================================
+
+This document represents our official search engine optimization (SEO) standard.
+All copywriters and SEO agents must check this checklist when drafting content
+or auditing landing pages.
+
+--------------------------------------------------------------------------------
+SECTION 1: KEYWORD DENSITY AND POSITIONING
+--------------------------------------------------------------------------------
+* Primary Keywords: Must be placed in:
+  - The main H1 title.
+  - The first 100 words of the introduction.
+  - At least two H2 or H3 subheadings.
+* Keyword Density: Keep keyword density strictly between 1.2% and 1.8%.
+  Avoid keyword stuffing. If the density exceeds 2.0%, flag for re-writing.
+
+--------------------------------------------------------------------------------
+SECTION 2: CONTENT STRUCTURE AND READABILITY
+--------------------------------------------------------------------------------
+* Paragraph Length: Keep paragraphs short. Maximum 3-4 sentences (under 60 words).
+* Sentence Length: Keep sentences under 20 words for premium mobile readability.
+* Bullet Points: Every article must include at least one bulleted list or a
+  structured key takeaways table to increase user session duration.
+* Subheading Frequency: Include a descriptive H2/H3 subheading every 250-300 words.
+
+--------------------------------------------------------------------------------
+SECTION 3: METADATA AND INTERNAL LINKING
+--------------------------------------------------------------------------------
+* Meta Title: Must be under 60 characters and contain the primary keyword.
+* Meta Description: Must be under 155 characters and contain a clear call to action.
+* Internal Links: Every draft post must suggest at least two links to other related
+  internal resource pages (e.g. /features or /pricing).
+================================================================================

@@ -1,0 +1,39 @@
+================================================================================
+NEXUS AI SYSTEMS: OFFICIAL CUSTOMER REFUND & SUBSCRIPTION CANCELLATION POLICY
+================================================================================
+
+This document outlines the standard operational guidelines, rules, and SLA limits
+concerning product refunds, subscription cancellations, and billing disputes.
+All customer support agents must consult this brain document prior to answering
+client billing questions.
+
+--------------------------------------------------------------------------------
+SECTION 1: THE 14-DAY RISK-FREE GUARANTEE
+--------------------------------------------------------------------------------
+* All new SaaS subscriptions (including Pro, Agency, and Enterprise tiers) are
+  eligible for our 14-Day Risk-Free Trial Guarantee.
+* If a customer submits a refund request within 14 calendar days of their initial
+  purchase, they are entitled to a full 100% refund. No questions asked.
+* Refund requests submitted after Day 14 are NOT eligible for a refund.
+
+--------------------------------------------------------------------------------
+SECTION 2: SUBSCRIPTION CANCELLATION RULES
+--------------------------------------------------------------------------------
+* Customers can cancel their subscription at any time directly through their
+  "Plans & Billing" workspace dashboard.
+* Upon cancellation, their premium access remains active until the end of their
+  current billing period.
+* On the billing expiration date, the plugin automatically removes the local
+  cryptographic licensing signature, safely downgrading the workspace capacity
+  back to the Starter/Free tier (1 active agent limit) without losing or breaking
+  existing employee files or database records.
+
+--------------------------------------------------------------------------------
+SECTION 3: DISPUTES AND CHARGEBACKS
+--------------------------------------------------------------------------------
+* If a customer opens a billing dispute or credit card chargeback without
+  contacting support first, their active workspace license is flagged as
+  "license_compromised_alert" in the system audit trail and is suspended.
+* To avoid suspension, customers should contact our finance team directly at:
+  billing@nexus-ai-saas.com.
+================================================================================

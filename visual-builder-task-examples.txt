@@ -1,0 +1,112 @@
+================================================================================
+NEXUS AI WORKFORCE: VISUAL WORKFLOW CANVAS PIPELINE TASK EXAMPLES
+================================================================================
+
+This document outlines distinct, real-world examples of multi-agent task pipelines
+to construct inside the Visual Workflow Canvas. Use these templates to easily
+understand how agents collaborate, how context passes forward, and what output
+results to expect in your WordPress workspace.
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: THE CONTENT AUTOMATION MACHINE
+--------------------------------------------------------------------------------
+* Pipeline Purpose:
+  Research keywords, draft a premium SEO-optimized article based on the checklist,
+  and automatically publish it as a WordPress Draft post.
+
+* Step 1: Assigned Agent: Sarah (SEO Keyword Analyst)
+  - Task Input:
+    "Analyze current industry keywords for 'enterprise artificial intelligence' and
+    'AI multi-agent workforce' and select 3 high-impact keywords. Output only the
+    keyword list and their search intent."
+  - Expected Output:
+    A bulleted list of 3 selected keywords (e.g. 'autonomous AI teams') and search intents.
+
+* Step 2: Assigned Agent: Elena (Growth Architect / Copywriter)
+  - Task Input:
+    "Write a high-converting, premium introduction and structure outline for a
+    blog post based on the 3 selected keywords from Step 1. Incorporate the SEO SOP
+    guidelines: Keep sentences under 20 words and paragraph lengths short (3-4 sentences max)."
+  - Expected Input Received:
+    The keyword list output from Step 1 is automatically passed in as background context.
+  - Expected Output:
+    A beautifully structured introductory copy and outline including H2 headings.
+
+* Step 3: Assigned Agent: Alexander (Chief Strategy Officer / Editor)
+  - Task Input:
+    "Review the outline from Step 2. Expand it into a full 800-word draft article.
+    Ensure our brand values of 'Data Sovereignty' and 'ROI Maximization' are explicitly
+    highlighted. Format in clean Markdown."
+  - Expected Input Received:
+    The introductory copy and outline from Step 2 is automatically passed in as context.
+  - Expected Output:
+    A full, publication-ready, markdown-formatted draft blog post.
+  - Terminal WordPress State:
+    Upon completion, a brand-new post containing this exact text is created inside your
+    WordPress Admin under Posts > All Posts (Status: Draft), ready for your final review.
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: THE WOOCOMMERCE PRODUCT LAUNCH PIPELINE
+--------------------------------------------------------------------------------
+* Pipeline Purpose:
+  Analyze product positioning and competitive strategies, draft premium product descriptions,
+  and automatically insert the new product into WooCommerce with pricing metadata.
+
+* Step 1: Assigned Agent: Alexander (Chief Strategy Officer)
+  - Task Input:
+    "Review our target segment for our premium 'Nexus AI Workforce Operating System'.
+    Identify 3 major value pillars and positioning strategy against solo chatbot SaaS apps."
+  - Expected Output:
+    A strategic positioning brief highlighting Multi-Agent Orchestration and White-Label options.
+
+* Step 2: Assigned Agent: Elena (Growth Architect)
+  - Task Input:
+    "Persuasively write a benefit-driven product description for WooCommerce based on
+    the positioning strategy in Step 1. Ensure the description contains high-converting
+    calls to action. Structure as short paragraphs with bullet points of key features."
+  - Expected Output:
+    A compelling WooCommerce product description body in HTML/Markdown.
+
+* Step 3: Assigned Agent: Marcus (Systems Architect / WooCommerce Connector)
+  - Task Input:
+    "Create a WooCommerce product using the description from Step 2. Set the regular
+    price as $497.00/mo (matching our Agency Plan) and map it to the Category 'Software Services'."
+  - Expected Output:
+    Triggering of the native WooCommerce Create Product Action API.
+  - Terminal WordPress State:
+    A new, live product titled 'Nexus AI Workforce OS' is created in WooCommerce > Products,
+    fully populated with the description, price ($497.00), and categorization.
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: THE CUSTOMER SUPPORT FAQ AUTOMATOR
+--------------------------------------------------------------------------------
+* Pipeline Purpose:
+  Parse common support inquiries, query the Company Brain for the matching policy,
+  and generate an elegant email reply template for the support team.
+
+* Step 1: Assigned Agent: Support Parser (Simple Agent)
+  - Task Input:
+    "Read this incoming ticket from customer_inquiry@company.com: 'Hi, I bought the
+    Pro Plan 8 days ago and wanted to know if I cancel, will I lose my data and can
+    I get a refund?' Extract the core question."
+  - Expected Output:
+    A summary of queries: Refund eligibility (Day 8 purchase) and cancellation data impact.
+
+* Step 2: Assigned Agent: Sarah (Knowledge Base Liaison / Support Manager)
+  - Task Input:
+    "Query our Refund & Cancellation Policy brain to find the exact rules regarding:
+    1) 14-day Risk-Free Guarantee refund rules.
+    2) What happens to client files and databases when a subscription is cancelled."
+  - Expected Output:
+    Retrieves policy fragments (Day 8 is within 14-day window = 100% refund; cancellation
+    safe-downgrades to Free tier on expiration date without breaking database records).
+
+* Step 3: Assigned Agent: Elena (Growth Architect)
+  - Task Input:
+    "Compose a highly professional, empathetic, and reassuring email response to
+    customer_inquiry@company.com based on the policy details retrieved in Step 2.
+    Provide clear step-by-step instructions on how to cancel and assure them their
+    files are completely safe."
+  - Expected Output:
+    A complete email template draft with dynamic parameters, ready to copy and send.
+================================================================================

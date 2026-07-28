@@ -1,0 +1,567 @@
+<!--
+================================================================================
+NEXUS AI WORKFORCE: PREMIUM ELEMENTOR SALES LANDING PAGE (HTML & CSS)
+================================================================================
+INSTRUCTIONS FOR ELEMENTOR:
+1. Create or edit a page in Elementor.
+2. Add an "HTML" widget to your section.
+3. Copy and paste this complete code block directly into the HTML textarea.
+4. This page is fully self-contained, responsive, SEO-friendly, and utilizes
+   modern flat-luxury styling with elegant hover micro-interactions.
+================================================================================
+-->
+
+<div id="nexus-sales-page-wrapper">
+    <style>
+        /* Modern scoped CSS variables for premium, high-converting luxury design */
+        #nexus-sales-page-wrapper {
+            --nexus-primary: #7C3AED;
+            --nexus-primary-hover: #6D28D9;
+            --nexus-secondary: #0ea5e9;
+            --nexus-dark-bg: #0f172a;
+            --nexus-light-bg: #f8fafc;
+            --nexus-card-bg: #ffffff;
+            --nexus-text-main: #1e293b;
+            --nexus-text-muted: #64748b;
+            --nexus-accent-gold: #f59e0b;
+            --nexus-success: #10b981;
+
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--nexus-text-main);
+            background-color: var(--nexus-light-bg);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Hero Section Styling */
+        #nexus-sales-page-wrapper .nexus-hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #nexus-sales-page-wrapper .nexus-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        #nexus-sales-page-wrapper .nexus-badge {
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid var(--nexus-primary);
+            color: #d8b4fe;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-hero-title {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-hero-title span {
+            background: linear-gradient(to right, #a78bfa, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #nexus-sales-page-wrapper .nexus-hero-subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+            max-width: 750px;
+            margin: 0 auto 40px;
+            font-weight: 400;
+        }
+
+        #nexus-sales-page-wrapper .nexus-btn {
+            background-color: var(--nexus-primary);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 16px 36px;
+            border-radius: 12px;
+            font-size: 15px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #nexus-sales-page-wrapper .nexus-btn:hover {
+            background-color: var(--nexus-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -3px rgba(124, 58, 237, 0.45);
+        }
+
+        /* Features Section */
+        #nexus-sales-page-wrapper .nexus-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #nexus-sales-page-wrapper .nexus-section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-section-subtitle {
+            color: var(--nexus-primary);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #nexus-sales-page-wrapper .nexus-section-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--nexus-dark-bg);
+            letter-spacing: -1px;
+            margin: 0;
+        }
+
+        #nexus-sales-page-wrapper .nexus-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-feature-card {
+            background-color: var(--nexus-card-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 40px 30px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        #nexus-sales-page-wrapper .nexus-feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--nexus-primary);
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.05);
+        }
+
+        #nexus-sales-page-wrapper .nexus-feature-icon {
+            font-size: 35px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        #nexus-sales-page-wrapper .nexus-feature-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0 0 12px;
+            color: var(--nexus-dark-bg);
+        }
+
+        #nexus-sales-page-wrapper .nexus-feature-desc {
+            color: var(--nexus-text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Interactive Pricing Grid Section */
+        #nexus-sales-page-wrapper .nexus-pricing-section {
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 100px 20px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 45px 30px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-card.popular {
+            border: 2px solid var(--nexus-primary);
+            box-shadow: 0 15px 35px -5px rgba(124, 58, 237, 0.08);
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-card.popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--nexus-primary);
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-plan-name {
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--nexus-text-muted);
+            margin: 0 0 15px;
+            letter-spacing: 1px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-card.popular .nexus-plan-name {
+            color: var(--nexus-primary);
+        }
+
+        #nexus-sales-page-wrapper .nexus-plan-price {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 15px;
+            line-height: 1;
+        }
+
+        #nexus-sales-page-wrapper .nexus-plan-price span {
+            font-size: 14px;
+            color: var(--nexus-text-muted);
+            font-weight: normal;
+        }
+
+        #nexus-sales-page-wrapper .nexus-plan-desc {
+            font-size: 13px;
+            color: var(--nexus-text-muted);
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 40px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 25px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-features li {
+            font-size: 14px;
+            color: var(--nexus-text-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-features li svg {
+            color: var(--nexus-success);
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-btn {
+            display: block;
+            text-align: center;
+            background-color: #f1f5f9;
+            color: var(--nexus-text-main);
+            text-decoration: none;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-card.popular .nexus-price-btn {
+            background-color: var(--nexus-primary);
+            color: #ffffff;
+            box-shadow: 0 8px 12px -3px rgba(124, 58, 237, 0.2);
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-card.popular .nexus-price-btn:hover {
+            background-color: var(--nexus-primary-hover);
+        }
+
+        #nexus-sales-page-wrapper .nexus-price-btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* Testimonials */
+        #nexus-sales-page-wrapper .nexus-testimonials {
+            background-color: var(--nexus-light-bg);
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        #nexus-sales-page-wrapper .nexus-testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 50px auto 0;
+            text-align: left;
+        }
+
+        #nexus-sales-page-wrapper .nexus-testimonial-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 40px;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);
+        }
+
+        #nexus-sales-page-wrapper .nexus-quote {
+            font-size: 15px;
+            color: var(--nexus-text-main);
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 25px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--nexus-primary);
+        }
+
+        #nexus-sales-page-wrapper .nexus-author-info h4 {
+            font-weight: 800;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-author-info p {
+            font-size: 12px;
+            color: var(--nexus-text-muted);
+            margin: 0;
+        }
+
+        /* FAQs Section */
+        #nexus-sales-page-wrapper .nexus-faq-section {
+            padding: 100px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #nexus-sales-page-wrapper .nexus-faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 25px 0;
+        }
+
+        #nexus-sales-page-wrapper .nexus-faq-question {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 10px;
+        }
+
+        #nexus-sales-page-wrapper .nexus-faq-answer {
+            color: var(--nexus-text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0;
+        }
+    </style>
+
+    <!-- 1. Hero Section -->
+    <div class="nexus-hero">
+        <span class="nexus-badge">Now Active for WordPress 6.0+</span>
+        <h1 class="nexus-hero-title">Deploy a Fortune 500 Executive Team inside <span>WordPress</span></h1>
+        <p class="nexus-hero-subtitle">Stop chatting with raw, siloed bots. Hire a complete, specialized virtual AI workforce—CEO, CMO, Copywriter, and Developer—collaborating natively inside your WordPress dashboard to automate operations, publish posts, and scale revenue.</p>
+        <a href="#pricing" class="nexus-btn">Deploy Your AI Workforce</a>
+    </div>
+
+    <!-- 2. Features Grid Section -->
+    <div class="nexus-section">
+        <div class="nexus-section-header">
+            <span class="nexus-section-subtitle">Why Choose Nexus AI Workforce</span>
+            <h2 class="nexus-section-title">The First AI Operating System (AIOS) for WordPress</h2>
+        </div>
+        <div class="nexus-features-grid">
+            <div class="nexus-feature-card">
+                <span class="nexus-feature-icon">🧠</span>
+                <h3 class="nexus-feature-title">Multi-Tiered Company Brain</h3>
+                <p class="nexus-feature-desc">Ingest proprietary documents recursively from PDFs, DOCX, or live URLs. Content is chunked and stored directly in your database to ensure absolute data sovereignty.</p>
+            </div>
+            <div class="nexus-feature-card">
+                <span class="nexus-feature-icon">🤝</span>
+                <h3 class="nexus-feature-title">Real-Time AI Meetings</h3>
+                <p class="nexus-feature-desc">Assemble multiple specialized agents (e.g. CMO + SEO Specialist) in strategy sessions. Watch in real-time as they debate, refine ideas, and reach a consensus.</p>
+            </div>
+            <div class="nexus-feature-card">
+                <span class="nexus-feature-icon">⚙️</span>
+                <h3 class="nexus-feature-title">Visual Automation Canvas</h3>
+                <p class="nexus-feature-desc">Build advanced pipelines inside our drag-and-drop Visual Builder. Chain tasks sequentially so outputs pass forward automatically into other agents or WP posts.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Dynamic Pricing Grid Section -->
+    <div id="pricing" class="nexus-pricing-section">
+        <div class="nexus-section-header">
+            <span class="nexus-section-subtitle">Flexible Plans for Every Stage</span>
+            <h2 class="nexus-section-title">Premium Tiered Subscriptions</h2>
+        </div>
+        <div class="nexus-pricing-grid">
+            <!-- Starter -->
+            <div class="nexus-price-card">
+                <div>
+                    <h3 class="nexus-plan-name">Starter</h3>
+                    <p class="nexus-plan-price">$0<span>/mo</span></p>
+                    <p class="nexus-plan-desc">Perfect for testing the waters and single-user local setups.</p>
+                    <ul class="nexus-price-features">
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 1 Active AI Agent</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Local Database Storage</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> SQLite/Basic Memory</li>
+                    </ul>
+                </div>
+                <a href="/thank-you?plan=starter" class="nexus-price-btn">Get Started</a>
+            </div>
+
+            <!-- Pro -->
+            <div class="nexus-price-card popular">
+                <div>
+                    <h3 class="nexus-plan-name">Professional</h3>
+                    <p class="nexus-plan-price">$197<span>/mo</span></p>
+                    <p class="nexus-plan-desc">Ideal for small businesses, online shop owners, and solopreneurs.</p>
+                    <ul class="nexus-price-features">
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Up to 10 Active AI Agents</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Advanced RAG Engine</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Multi-Agent Workflows</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Priority Support</li>
+                    </ul>
+                </div>
+                <a href="/thank-you?plan=pro" class="nexus-price-btn">Subscribe to Pro</a>
+            </div>
+
+            <!-- Agency -->
+            <div class="nexus-price-card">
+                <div>
+                    <h3 class="nexus-plan-name">Agency</h3>
+                    <p class="nexus-plan-price">$497<span>/mo</span></p>
+                    <p class="nexus-plan-desc">Designed for design, developer, and marketing agencies reselling AI.</p>
+                    <ul class="nexus-price-features">
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Up to 100 Active AI Agents</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> White-Label Client Portals</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Centralized Admin Dashboard</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Priority API Response Keys</li>
+                    </ul>
+                </div>
+                <a href="/thank-you?plan=agency" class="nexus-price-btn">Select Agency</a>
+            </div>
+
+            <!-- Enterprise -->
+            <div class="nexus-price-card">
+                <div>
+                    <h3 class="nexus-plan-name">Enterprise</h3>
+                    <p class="nexus-plan-price">$997<span>/mo</span></p>
+                    <p class="nexus-plan-desc">Fully customized setups for organizations requiring top security.</p>
+                    <ul class="nexus-price-features">
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Unlimited Active Agents</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Local Ollama Hosting</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Dedicated Pinecone DB</li>
+                        <li><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Dedicated support SLA</li>
+                    </ul>
+                </div>
+                <a href="/thank-you?plan=enterprise" class="nexus-price-btn">Contact Sales</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Testimonials Section -->
+    <div class="nexus-testimonials">
+        <div class="nexus-section-header">
+            <span class="nexus-section-subtitle">Real Impact. Real Outcomes.</span>
+            <h2 class="nexus-section-title">Success Stories From the Field</h2>
+        </div>
+        <div class="nexus-testimonial-grid">
+            <div class="nexus-testimonial-card">
+                <p class="nexus-quote">"Deploying Nexus AI has allowed our SEO agency to automate over 75% of content brainstorming and copywriting tasks. We charged over $5,000/mo for a client portfolio managed completely by 3 virtual agents. Incredible ROI."</p>
+                <div class="nexus-author">
+                    <div class="nexus-author-avatar">JD</div>
+                    <div class="nexus-author-info">
+                        <h4>James Devlin</h4>
+                        <p>CEO, PixelForge Marketing</p>
+                    </div>
+                </div>
+            </div>
+            <div class="nexus-testimonial-card">
+                <p class="nexus-quote">"Having an AI COO and CMO that actually can look at our SOP database on WordPress and suggest ad copies is mind-blowing. The Visual Builder makes linking automated chains incredibly easy to understand."</p>
+                <div class="nexus-author">
+                    <div class="nexus-author-avatar">SL</div>
+                    <div class="nexus-author-info">
+                        <h4>Sarah Lindqvist</h4>
+                        <p>Founder, Elevate eCommerce</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. FAQ Section (SEO Structured) -->
+    <div class="nexus-faq-section">
+        <div class="nexus-section-header">
+            <span class="nexus-section-subtitle">FAQ</span>
+            <h2 class="nexus-section-title">Frequently Asked Questions</h2>
+        </div>
+        <div class="nexus-faq-item">
+            <h3 class="nexus-faq-question">What makes Nexus AI different from ChatGPT Teams?</h3>
+            <p class="nexus-faq-answer">Unlike ChatGPT which is an isolated cloud chat box, Nexus AI Workforce is self-hosted natively inside your WordPress database. It offers multi-agent collaboration meetings, automated visual workflows, and can execute real site actions like writing draft posts or editing products.</p>
+        </div>
+        <div class="nexus-faq-item">
+            <h3 class="nexus-faq-question">Are my API keys and company data secure?</h3>
+            <p class="nexus-faq-answer">Yes, absolutely. All sensitive API keys are encrypted using robust AES-256-CTR encryption before storing. Your parsed RAG documents, message transcripts, and memory chunks remain secure on your own local server.</p>
+        </div>
+        <div class="nexus-faq-item">
+            <h3 class="nexus-faq-question">How does dynamic billing and license key activation work?</h3>
+            <p class="nexus-faq-answer">When a user purchases a plan, the server generates a cryptographically signed license key via secure HMAC-SHA256. Upon activating locally, your plugin checks this key remotely and securely expands your active workforce agent boundaries.</p>
+        </div>
+    </div>
+</div>

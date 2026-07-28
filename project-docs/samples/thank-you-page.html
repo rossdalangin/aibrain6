@@ -1,0 +1,171 @@
+<!--
+================================================================================
+NEXUS AI WORKFORCE: PREMIUM ELEMENTOR THANK YOU PAGE (HTML & CSS)
+================================================================================
+INSTRUCTIONS FOR ELEMENTOR:
+1. Create a page styled "Thank You" with slug "thank-you" in WordPress.
+2. Drag an "HTML" widget onto the page.
+3. Paste this code directly into the widget text area.
+================================================================================
+-->
+
+<div id="nexus-thank-you-page-wrapper">
+    <style>
+        #nexus-thank-you-page-wrapper {
+            --nexus-primary: #7C3AED;
+            --nexus-primary-hover: #6D28D9;
+            --nexus-secondary: #0ea5e9;
+            --nexus-dark-bg: #0f172a;
+            --nexus-light-bg: #f8fafc;
+            --nexus-card-bg: #ffffff;
+            --nexus-text-main: #1e293b;
+            --nexus-text-muted: #64748b;
+            --nexus-border: #e2e8f0;
+            --nexus-success: #10b981;
+
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--nexus-text-main);
+            background-color: var(--nexus-light-bg);
+            line-height: 1.6;
+            padding: 100px 20px;
+        }
+
+        #nexus-thank-you-page-wrapper .thank-you-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid var(--nexus-border);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 15px 35px -5px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        #nexus-thank-you-page-wrapper .confetti {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        #nexus-thank-you-page-wrapper h1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 10px;
+            letter-spacing: -1px;
+        }
+
+        #nexus-thank-you-page-wrapper .sub-msg {
+            color: var(--nexus-text-muted);
+            font-size: 15px;
+            margin-top: 0;
+            margin-bottom: 35px;
+        }
+
+        #nexus-thank-you-page-wrapper .license-box {
+            background-color: #f8fafc;
+            border: 1px dashed var(--nexus-primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 35px;
+            text-align: left;
+        }
+
+        #nexus-thank-you-page-wrapper .license-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--nexus-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        #nexus-thank-you-page-wrapper .license-key {
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--nexus-dark-bg);
+            background: #ffffff;
+            border: 1px solid var(--nexus-border);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: block;
+            text-align: center;
+        }
+
+        #nexus-thank-you-page-wrapper .next-steps {
+            text-align: left;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 30px;
+        }
+
+        #nexus-thank-you-page-wrapper .next-steps h3 {
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 15px;
+        }
+
+        #nexus-thank-you-page-wrapper .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #nexus-thank-you-page-wrapper .step-list li {
+            font-size: 13px;
+            color: var(--nexus-text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        #nexus-thank-you-page-wrapper .step-num {
+            background-color: rgba(124, 58, 237, 0.1);
+            color: var(--nexus-primary);
+            font-weight: 800;
+            font-size: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+    </style>
+
+    <div class="thank-you-container">
+        <span class="confetti">🎉</span>
+        <h1>Subscription Confirmed!</h1>
+        <p class="sub-msg">Your transaction was securely completed and processed by our master server.</p>
+
+        <!-- License Key Box -->
+        <div class="license-box">
+            <span class="license-label">Your Secure Licensing Key</span>
+            <span class="license-key">NEXUS-PRO-KEY-39912</span>
+            <p style="font-size: 11px; color: var(--nexus-text-muted); margin-top: 8px; margin-bottom: 0;">Copy this key. For manual tests, go to **Client Activation** and paste it.</p>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+            <h3>Activation Protocols</h3>
+            <ul class="step-list">
+                <li>
+                    <span class="step-num">1</span>
+                    <span>Navigate to your local WordPress dashboard and click on the **Nexus AI > License & Payments** tab.</span>
+                </li>
+                <li>
+                    <span class="step-num">2</span>
+                    <span>Go to the **Client Activation** card, paste your secure licensing key, and click **Activate Local License**.</span>
+                </li>
+                <li>
+                    <span class="step-num">3</span>
+                    <span>Your local workspace limits will dynamically expand instantly, unlocking all elite capabilities.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

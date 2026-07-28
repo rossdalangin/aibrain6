@@ -1,0 +1,190 @@
+<!--
+================================================================================
+NEXUS AI WORKFORCE: PREMIUM ELEMENTOR CONTACT PAGE (HTML & CSS)
+================================================================================
+INSTRUCTIONS FOR ELEMENTOR:
+1. Create a page styled "Contact" in WordPress / Elementor.
+2. Drag an "HTML" widget onto the page.
+3. Paste this code directly into the widget text area.
+================================================================================
+-->
+
+<div id="nexus-contact-page-wrapper">
+    <style>
+        #nexus-contact-page-wrapper {
+            --nexus-primary: #7C3AED;
+            --nexus-primary-hover: #6D28D9;
+            --nexus-secondary: #0ea5e9;
+            --nexus-dark-bg: #0f172a;
+            --nexus-light-bg: #f8fafc;
+            --nexus-card-bg: #ffffff;
+            --nexus-text-main: #1e293b;
+            --nexus-text-muted: #64748b;
+            --nexus-border: #e2e8f0;
+
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--nexus-text-main);
+            background-color: var(--nexus-light-bg);
+            line-height: 1.6;
+            padding: 80px 20px;
+        }
+
+        #nexus-contact-page-wrapper .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid var(--nexus-border);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.03);
+        }
+
+        #nexus-contact-page-wrapper .contact-info h1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 15px;
+            letter-spacing: -1px;
+        }
+
+        #nexus-contact-page-wrapper .contact-info p {
+            font-size: 15px;
+            color: var(--nexus-text-muted);
+            margin-bottom: 40px;
+        }
+
+        #nexus-contact-page-wrapper .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        #nexus-contact-page-wrapper .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        #nexus-contact-page-wrapper .detail-item h4 {
+            margin: 0 0 5px;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--nexus-dark-bg);
+        }
+
+        #nexus-contact-page-wrapper .detail-item p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--nexus-text-muted);
+        }
+
+        #nexus-contact-page-wrapper .contact-form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #nexus-contact-page-wrapper .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #nexus-contact-page-wrapper .form-group label {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--nexus-dark-bg);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #nexus-contact-page-wrapper .form-group input,
+        #nexus-contact-page-wrapper .form-group select,
+        #nexus-contact-page-wrapper .form-group textarea {
+            padding: 12px;
+            border: 1px solid var(--nexus-border);
+            border-radius: 10px;
+            background-color: #f8fafc;
+            color: var(--nexus-text-main);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #nexus-contact-page-wrapper .form-group input:focus,
+        #nexus-contact-page-wrapper .form-group select:focus,
+        #nexus-contact-page-wrapper .form-group textarea:focus {
+            border-color: var(--nexus-primary);
+        }
+
+        #nexus-contact-page-wrapper .submit-btn {
+            background-color: var(--nexus-primary);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.2s;
+        }
+
+        #nexus-contact-page-wrapper .submit-btn:hover {
+            background-color: var(--nexus-primary-hover);
+        }
+    </style>
+
+    <div class="contact-container">
+        <!-- Left Column -->
+        <div class="contact-info">
+            <h1>Let's Align Your Enterprise</h1>
+            <p>Connect with our expert workspace team. Reach out for custom SLA design, dedicated model setup assistance, or high-volume agency consulting packs.</p>
+            <div class="contact-details">
+                <div class="detail-item">
+                    <span style="font-size: 20px;">✉</span>
+                    <div>
+                        <h4>Enterprise Support</h4>
+                        <p>enterprise@nexus-ai-saas.com</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <span style="font-size: 20px;">🏢</span>
+                    <div>
+                        <h4>Headquarters</h4>
+                        <p>Nexus AI Workforce Inc, Suite 101, Silicon Valley, CA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <form class="contact-form-container" onsubmit="event.preventDefault(); alert('Request successfully queued. An Enterprise Account Specialist will contact you within 2 hours.');">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" required placeholder="e.g. John Doe">
+            </div>
+            <div class="form-group">
+                <label for="email">Business Email</label>
+                <input type="email" id="email" required placeholder="john@company.com">
+            </div>
+            <div class="form-group">
+                <label for="interest">Select Plan Level</label>
+                <select id="interest">
+                    <option value="pro">Professional Plan ($197/mo)</option>
+                    <option value="agency">Agency Plan ($497/mo)</option>
+                    <option value="enterprise" selected>Enterprise Plan ($997/mo default)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="notes">SLA Requirements or Questions</label>
+                <textarea id="notes" rows="4" placeholder="Detail any custom requirements..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send SLA Consultation Request</button>
+        </form>
+    </div>
+</div>

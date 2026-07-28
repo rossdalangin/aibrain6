@@ -1,0 +1,195 @@
+<!--
+================================================================================
+NEXUS AI WORKFORCE: PREMIUM ELEMENTOR FEATURES PAGE (HTML & CSS)
+================================================================================
+INSTRUCTIONS FOR ELEMENTOR:
+1. Create a page styled "Features" in WordPress / Elementor.
+2. Drag an "HTML" widget onto the page.
+3. Paste this code directly into the widget text area.
+================================================================================
+-->
+
+<div id="nexus-features-page-wrapper">
+    <style>
+        #nexus-features-page-wrapper {
+            --nexus-primary: #7C3AED;
+            --nexus-primary-hover: #6D28D9;
+            --nexus-secondary: #0ea5e9;
+            --nexus-dark-bg: #0f172a;
+            --nexus-light-bg: #f8fafc;
+            --nexus-card-bg: #ffffff;
+            --nexus-text-main: #1e293b;
+            --nexus-text-muted: #64748b;
+            --nexus-border: #e2e8f0;
+
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--nexus-text-main);
+            background-color: var(--nexus-light-bg);
+            line-height: 1.6;
+            padding: 80px 20px;
+        }
+
+        #nexus-features-page-wrapper .features-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 80px;
+        }
+
+        #nexus-features-page-wrapper .features-header h1 {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 15px;
+            letter-spacing: -1.2px;
+        }
+
+        #nexus-features-page-wrapper .features-header p {
+            font-size: 16px;
+            color: var(--nexus-text-muted);
+            margin: 0;
+        }
+
+        #nexus-features-page-wrapper .showcase-row {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            max-width: 1100px;
+            margin: 0 auto 100px;
+        }
+
+        #nexus-features-page-wrapper .showcase-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        #nexus-features-page-wrapper .showcase-text {
+            flex: 1;
+        }
+
+        #nexus-features-page-wrapper .showcase-text span {
+            color: var(--nexus-primary);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #nexus-features-page-wrapper .showcase-text h2 {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 15px;
+            letter-spacing: -0.5px;
+        }
+
+        #nexus-features-page-wrapper .showcase-text p {
+            color: var(--nexus-text-muted);
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        #nexus-features-page-wrapper .showcase-visual {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid var(--nexus-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.02);
+        }
+
+        #nexus-features-page-wrapper .bullet-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #nexus-features-page-wrapper .bullet-list li {
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--nexus-dark-bg);
+        }
+
+        #nexus-features-page-wrapper .bullet-list li::before {
+            content: "✦";
+            color: var(--nexus-primary);
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="features-header">
+        <h1>An Operating System of Unprecedented Capabilities</h1>
+        <p>Explore the elite features that separate Nexus AI Workforce from simple chatbots. Run specialized virtual workspaces secure on your own infrastructure.</p>
+    </div>
+
+    <!-- Showcase 1 -->
+    <div class="showcase-row">
+        <div class="showcase-text">
+            <span>Talent Acquisition</span>
+            <h2>The Persona Wizard & Expert Suite</h2>
+            <p>Deploy specialized employee identities with tailored business roles, strategies, and KPIs in seconds. Pick from 30+ pre-seeded professional template configs (CEO, CMO, Copywriter, Systems Engineer) or engineer custom personas from scratch with explicit behavior guidelines.</p>
+            <ul class="bullet-list">
+                <li>Strict KPI parameters and objective mapping</li>
+                <li>Custom communication tones and voice outputs</li>
+                <li>Isolated workspace boundaries per agent</li>
+            </ul>
+        </div>
+        <div class="showcase-visual" style="border-left: 4px solid var(--nexus-primary);">
+            <div style="font-family: monospace; font-size: 12px; color: #475569;">
+                <p style="color: var(--nexus-primary); font-weight: bold;">[Active Persona: Alexander (CSO)]</p>
+                <p>• Model Settings: GPT-4o | Temp 0.4</p>
+                <p>• Skills: Financial Modeling, Competitor Analysis</p>
+                <p>• Negative Guardrails: "Do not recommend low-ROI tasks"</p>
+                <p>• Primary Objectives: Maximizing perceived corporate value.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Showcase 2 -->
+    <div class="showcase-row">
+        <div class="showcase-text">
+            <span>Knowledge Management</span>
+            <h2>Multi-Tiered Company Memory (RAG)</h2>
+            <p>Ground your virtual workforce with proprietary context. Ingest PDF, CSV, DOCX, or crawl online competitors in real-time. Nexus securely chunks your content and isolates memory maps into Global, Departmental, or individual Agent folders, preventing compliance leaking.</p>
+            <ul class="bullet-list">
+                <li>Self-hosted index storage inside WordPress</li>
+                <li>Drag-and-drop parsing with real-time status cues</li>
+                <li>Contextual filtering per active department</li>
+            </ul>
+        </div>
+        <div class="showcase-visual" style="border-left: 4px solid var(--nexus-secondary);">
+            <div style="font-family: monospace; font-size: 12px; color: #475569;">
+                <p style="color: var(--nexus-secondary); font-weight: bold;">[Ingested IQ: Refund_Policy.txt]</p>
+                <p>• Chunks generated: 4 semantic snippets</p>
+                <p>• Status: <span style="color: #10b981; font-weight: bold;">INDEXED ✓</span></p>
+                <p>• Scope: Global and Support departments only</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Showcase 3 -->
+    <div class="showcase-row">
+        <div class="showcase-text">
+            <span>Automation</span>
+            <h2>Visual Drag-and-Drop Workflow Canvas</h2>
+            <p>Chain specialized agents together on our modern, high-contrast, Linear-style canvas visual environment. Set clear sequential steps where previous outputs flow directly forward as next-stage prompts, creating fully autonomous pipelines like content publication machines.</p>
+            <ul class="bullet-list">
+                <li>High-contrast light-themed visible canvas</li>
+                <li>Real-time Workflow Execution Trace logging</li>
+                <li>Native WooCommerce and draft post connectors</li>
+            </ul>
+        </div>
+        <div class="showcase-visual" style="border-left: 4px solid var(--nexus-accent-gold);">
+            <div style="font-family: monospace; font-size: 12px; color: #475569;">
+                <p style="color: var(--nexus-accent-gold); font-weight: bold;">[Visual Pipeline: Content Machine]</p>
+                <p>• Step 1: Sarah (SEO Analyst) -> Inquire Keywords</p>
+                <p>• Step 2: Elena (CMO) -> Write persusive article drafts</p>
+                <p>• Step 3: Publish draft post natively to WordPress database</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,97 @@
+================================================================================
+NEXUS AI WORKFORCE: THE ULTI-PREMIUM MULTI-AGENT AI OPERATING SYSTEM (AIOS)
+================================================================================
+
+Nexus AI Workforce is an enterprise-grade Multi-Agent Collaboration and Artificial
+Intelligence Operating System (AIOS) built natively for WordPress. Rather than
+interacting with static, siloed chatbots, Nexus AI Workforce allows businesses,
+founders, and digital agencies to deploy an entire virtual executive suite of
+highly specialized AI employees that share a centralized memory and autonomously
+collaborate to deliver finished, high-impact business outcomes.
+
+--------------------------------------------------------------------------------
+1. CORE VALUE PROPOSITION & SYSTEM PHILOSOPHY
+--------------------------------------------------------------------------------
+* Stop Prompts, Start Outcomes:
+  Generic AI tools require continuous manual context-switching, prompting, and
+  human oversight. Nexus turns AI into a team. By assigning specific Strategic
+  KPIs, reasoning styles, and action guardrails to specialized personas (e.g. CEO,
+  CMO, Developer), businesses can delegate complete tasks and watch their virtual
+  team debate, reach consensus, and execute actions autonomously.
+
+* Absolute Data Sovereignty (Self-Hosted Hybrid Model):
+  In an era of cloud-privacy concerns, Nexus AI Workforce stores all corporate
+  documents, operational SOPs, and chat logs directly in your local WordPress
+  database. Your intellectual property never trains public models.
+
+* Ultra-Premium Design Mastery:
+  A premium, high-impact dashboard interface engineered with modern flat layouts,
+  highly polished light-theme contrast, visual grids, and zero layout friction.
+
+--------------------------------------------------------------------------------
+2. KEY SYSTEM MODULES
+--------------------------------------------------------------------------------
+* 🏢 HIRE AI AGENTS (THE PERSONA WIZARD)
+  Deploy expert talent instantly using battle-tested templates or custom profiles.
+  Configure every detail of an agent's DNA: Professional Position, Core Mission,
+  Skills, Communication Tone, Voice, LLM Provider (GPT-4o, Claude 3.5, Gemini 1.5),
+  Thinking Process, and Negative Constraints (Guardrails) to prevent hallucinations.
+
+* 🧠 COMPANY BRAIN (MULTI-TIERED RAG ENGINE)
+  Ingest proprietary knowledge recursively from PDFs, DOCX, TXT, or live website
+  scraping. Nexus organizes intelligence into Global, Department, and Agent-level
+  tiers. Agents securely query this "shared IQ" to ground their answers with
+  factual, company-specific contexts.
+
+* 🤝 COLLABORATION HUB (VIRTUAL MEETING ROOMS)
+  Invite multiple AI specialists into strategy meetings on dynamic agendas. Watch
+  in real-time as they critique each other, debate, build alignment, and execute
+  autonomous consensus loops until they reach a formal decision keyword.
+
+* ⚙️ MULTI-AGENT AUTOMATIONS (VISUAL BUILDER CANVAS)
+  Orchestrate advanced operational flows on a highly responsive, high-contrast,
+  light-themed visual drag-and-drop canvas. Chain agents linearly (e.g., SEO Researcher
+  -> Conversion Copywriter -> WP Developer) so outputs persist forward as direct
+  context for the next step, producing fully drafted WordPress posts automatically.
+
+* 📚 LEARNING CENTER (ELITE PROMPTING PLAYBOOK)
+  An interactive, premium learning dashboard to help users master workspace limits.
+  Includes a fully copyable prompting handbook and SOP templates for high-velocity roles.
+
+* 🗄️ STRATEGIC ARCHIVE (WITH SECURE SESSION DELETION)
+  A centralized database of past sessions, workflow traces, and transcripts. Contains
+  a single-click session deletion tool that securely purges both parent conversations
+  and nested messages from the database to maintain clean database records.
+
+--------------------------------------------------------------------------------
+3. SaaS REVENUE, DYNAMIC BILLING & CRYPTOGRAPHIC LICENSING
+--------------------------------------------------------------------------------
+Nexus AI Workforce is paired with a Licensing & Payment SaaS Bridge, allowing creators
+to sell AI-as-a-Service subscriptions directly through secure payment loops (Stripe/PayPal):
+
+* Flexible, Standardized Tiers and Pricing:
+  - STARTER PLAN ($0/mo): Perfect for testing. Restricts to 1 active agent.
+  - PROFESSIONAL PLAN ($197/mo): Up to 10 active agents and advanced RAG uploads.
+  - AGENCY PLAN ($497/mo): Up to 100 active agents, white-labeling, and client portals.
+  - ENTERPRISE PLAN ($997/mo): Unlimited agents, Local Ollama hosting, Pinecone DB.
+
+* Dynamic Price Management:
+  Administrators can dynamically configure and modify the Pro, Agency, and Enterprise
+  monthly rates directly from the admin dashboard (Pricing & Gateways settings page).
+  Changes instantly synchronize across the licensing backend and the Client Billing pages.
+
+* Secure Cryptographic Fulfillment:
+  When a user purchases a plan, the master server generates a cryptographically-signed
+  license key via a secure HMAC-SHA256 signature using a shared master secret salt.
+  Upon client activation, the local workspace validates the signature to unlock agent limits.
+  Any database tampering or signature mismatch automatically downgrades the site back
+  to the Starter tier, ensuring bulletproof license lock-shielding.
+
+--------------------------------------------------------------------------------
+4. ARCHITECTURAL PERFORMANCE
+--------------------------------------------------------------------------------
+* Fully-Optimized 13-Table Database Schema for maximum referential integrity.
+* Secure REST API endpoints restricted via role capabilities.
+* In-flight AES-256-CTR encryption for all third-party API Keys.
+* Stable, lint-verified PHP and JS base that ensures flawless execution across PHP 8.1+.
+================================================================================

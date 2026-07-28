@@ -1,0 +1,180 @@
+<!--
+================================================================================
+NEXUS AI WORKFORCE: PREMIUM ELEMENTOR PRICING PAGE (HTML & CSS)
+================================================================================
+INSTRUCTIONS FOR ELEMENTOR:
+1. Create a page styled "Pricing" in WordPress / Elementor.
+2. Drag an "HTML" widget onto the page.
+3. Paste this code directly into the widget text area.
+================================================================================
+-->
+
+<div id="nexus-pricing-page-wrapper">
+    <style>
+        #nexus-pricing-page-wrapper {
+            --nexus-primary: #7C3AED;
+            --nexus-primary-hover: #6D28D9;
+            --nexus-secondary: #0ea5e9;
+            --nexus-dark-bg: #0f172a;
+            --nexus-light-bg: #f8fafc;
+            --nexus-card-bg: #ffffff;
+            --nexus-text-main: #1e293b;
+            --nexus-text-muted: #64748b;
+            --nexus-border: #e2e8f0;
+            --nexus-success: #10b981;
+
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--nexus-text-main);
+            background-color: var(--nexus-light-bg);
+            line-height: 1.6;
+            padding: 80px 20px;
+        }
+
+        #nexus-pricing-page-wrapper .pricing-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        #nexus-pricing-page-wrapper .pricing-header h1 {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--nexus-dark-bg);
+            margin: 0 0 15px;
+            letter-spacing: -1.2px;
+        }
+
+        #nexus-pricing-page-wrapper .pricing-header p {
+            font-size: 16px;
+            color: var(--nexus-text-muted);
+            margin: 0;
+        }
+
+        #nexus-pricing-page-wrapper .comparison-table-container {
+            max-width: 1000px;
+            margin: 80px auto 0;
+            background: #ffffff;
+            border: 1px solid var(--nexus-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.03);
+        }
+
+        #nexus-pricing-page-wrapper .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        #nexus-pricing-page-wrapper .comparison-table th,
+        #nexus-pricing-page-wrapper .comparison-table td {
+            padding: 18px 24px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        #nexus-pricing-page-wrapper .comparison-table th {
+            background-color: #f8fafc;
+            color: var(--nexus-dark-bg);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        #nexus-pricing-page-wrapper .comparison-table td.feature-name {
+            font-weight: 700;
+            color: var(--nexus-dark-bg);
+        }
+
+        #nexus-pricing-page-wrapper .comparison-table td.check-val {
+            color: var(--nexus-success);
+            font-weight: bold;
+        }
+
+        #nexus-pricing-page-wrapper .comparison-table tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        #nexus-pricing-page-wrapper .pricing-badge {
+            background-color: rgba(124, 58, 237, 0.1);
+            color: var(--nexus-primary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+    </style>
+
+    <div class="pricing-header">
+        <h1>Transparent, Growth-Focused Plans</h1>
+        <p>Unlock the power of specialized multi-agent teams on your own secure server. Scale from 1 agent to unlimited operations with no hidden fees.</p>
+    </div>
+
+    <!-- Comparative Table -->
+    <div class="comparison-table-container">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th style="width: 32%;">Features & limits</th>
+                    <th style="width: 17%;">Starter ($0)</th>
+                    <th style="width: 17%;">Pro ($197/mo)</th>
+                    <th style="width: 17%;">Agency ($497/mo)</th>
+                    <th style="width: 17%;">Enterprise ($997/mo)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="feature-name">Active AI Employees</td>
+                    <td>1 Agent limit</td>
+                    <td>Up to 10 Agents</td>
+                    <td>Up to 100 Agents</td>
+                    <td><span class="pricing-badge">Unlimited</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Shared Company Brain (RAG)</td>
+                    <td>Basic Database</td>
+                    <td>Advanced Ingestion</td>
+                    <td>Enterprise Ingestion</td>
+                    <td><span class="pricing-badge">Dedicated Pinecone</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">File Upload Formats</td>
+                    <td>TXT only</td>
+                    <td>PDF, DOCX, TXT</td>
+                    <td>PDF, DOCX, TXT, CSV</td>
+                    <td>All Formats + API feeds</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Multi-Agent Collaboration</td>
+                    <td>—</td>
+                    <td class="check-val">✓ (Meetings Only)</td>
+                    <td class="check-val">✓ (Meetings & Flows)</td>
+                    <td class="check-val">✓ (Full Suite)</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">White-Label Branding</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td class="check-val">✓ Complete Setup</td>
+                    <td class="check-val">✓ Custom Domain integration</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Local Model Support (Ollama)</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td class="check-val">✓ Included</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Support SLA</td>
+                    <td>Standard community</td>
+                    <td>Priority Email</td>
+                    <td>24/7 Slack Hook</td>
+                    <td><span class="pricing-badge">Dedicated Account Mgr</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
