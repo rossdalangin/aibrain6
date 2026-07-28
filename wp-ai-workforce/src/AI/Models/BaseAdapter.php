@@ -99,19 +99,28 @@ abstract class BaseAdapter implements AIModelInterface {
 		$clean_user_msg = preg_replace( '/\s*Please think step-by-step before providing your final answer\..*/s', '', $user_msg );
 		$clean_user_msg = trim( $clean_user_msg );
 
-		// Detect if there is a chairman intervention message
-		$chairman_intervention = '';
-		if ( preg_match( '/CHAIRMAN INTERVENTION:\s*([^\n]+)/i', $user_msg, $ch_matches ) ) {
-			$chairman_intervention = trim( $ch_matches[1] );
-			// Clean chairman intervention as well
-			$chairman_intervention = preg_replace( '/\s*Please think step-by-step before providing your final answer\..*/s', '', $chairman_intervention );
-			$chairman_intervention = trim( $chairman_intervention );
-		}
-
 		// Extract actual agenda content or chairman intervention content from user message for more accurate topic extraction
 		$agenda_content = '';
 		if ( preg_match( '/AGENDA:\s*(.*?)(?=\.?\s*As the)/is', $user_msg, $agenda_matches ) ) {
 			$agenda_content = trim( $agenda_matches[1] );
+		}
+
+		// Detect if there is a chairman intervention message and split from strategic agenda
+		$chairman_intervention = '';
+		$strategic_agenda_text = $agenda_content;
+		if ( ! empty( $agenda_content ) ) {
+			if ( preg_match( '/(.*?)\s*CHAIRMAN INTERVENTION:\s*(.*)/is', $agenda_content, $split_matches ) ) {
+				$strategic_agenda_text = trim( $split_matches[1] );
+				$chairman_intervention = trim( $split_matches[2] );
+			}
+		}
+
+		if ( empty( $chairman_intervention ) && preg_match( '/CHAIRMAN INTERVENTION:\s*([^\n]+)/i', $user_msg, $ch_matches ) ) {
+			$chairman_intervention = trim( $ch_matches[1] );
+		}
+		if ( ! empty( $chairman_intervention ) ) {
+			$chairman_intervention = preg_replace( '/\s*Please think step-by-step before providing your final answer\..*/s', '', $chairman_intervention );
+			$chairman_intervention = trim( $chairman_intervention );
 		}
 
 		// If we extracted specific agenda content, use that for topic extraction. Otherwise, fall back to clean user message.
@@ -275,13 +284,33 @@ abstract class BaseAdapter implements AIModelInterface {
 			$reply_body = $templates[ $hash % count($templates) ];
 		}
 
-		// Inject the chairman intervention context dynamically and in layman's terms if present
+		// Deeply analyze chairman command and check relevancy to the Strategic Agenda
 		if ( ! empty( $chairman_intervention ) ) {
-			$openers = [
-				"I hear your instruction about '{$chairman_intervention}', and here is how my department can help simply: ",
-				"That makes total sense regarding '{$chairman_intervention}'. To make this happen with maximum clarity: ",
-				"I completely agree with the focus on '{$chairman_intervention}'. From my perspective: "
-			];
+			$is_related = true;
+			if ( ! empty( $strategic_agenda_text ) ) {
+				$agenda_words = array_filter( explode( ' ', strtolower( $strategic_agenda_text ) ), function($w) { return strlen($w) > 4; } );
+				$intervention_words = array_filter( explode( ' ', strtolower( $chairman_intervention ) ), function($w) { return strlen($w) > 4; } );
+				$intersect = array_intersect( $agenda_words, $intervention_words );
+				$is_related = ! empty( $intersect );
+			}
+
+			if ( ! $is_related ) {
+				array_unshift( $reasoning_steps, "The chairman's command ('{$chairman_intervention}') has low direct relevancy to our original agenda ('{$strategic_agenda_text}'). Pivoting focus to deeply analyze and prioritize the chairman's directive using my {$agent_position} capability." );
+
+				$openers = [
+					"Pivoting to address your direct directive on '{$chairman_intervention}' as our top priority: ",
+					"Focusing specifically on your latest instruction regarding '{$chairman_intervention}' (noting the shift from our previous agenda): ",
+					"Understood, Chairman. Prioritizing your direct command regarding '{$chairman_intervention}' over the previous focus: "
+				];
+			} else {
+				array_unshift( $reasoning_steps, "Deeply analyze the chairman's command ('{$chairman_intervention}') and verify its high relevancy to the strategic agenda ('{$strategic_agenda_text}'). Synthesizing both for optimal response." );
+
+				$openers = [
+					"I hear your instruction about '{$chairman_intervention}', and here is how my department can help simply: ",
+					"That makes total sense regarding '{$chairman_intervention}'. To make this happen with maximum clarity: ",
+					"I completely agree with the focus on '{$chairman_intervention}'. From my perspective: "
+				];
+			}
 			$opener = $openers[ $hash % count($openers) ];
 			$reply_body = $opener . lcfirst($reply_body);
 		}

@@ -62,7 +62,11 @@ class ChatController {
 		As the {$agent['position']}, give your expert opinion or contribution to the goal.
 		Make sure your answer is the absolute best based on your unique role capability, highly relevant to what the chairman is asking or commanding, and demonstrates practical common sense.
 		Provide concrete, real-world examples when needed to back up your points.
-		CRITICAL: Avoid repeating or giving similar answers to what other participants have already stated; offer a unique perspective or a distinct, constructive critique.
+		CRITICAL REASONING & RELEVANCY CHECK:
+		1. Deeply analyze the command or directive of the chairman.
+		2. Sometimes the strategic agenda is not so related to the command of the chairman. Check the relevancy of the strategic agenda context to the chairman's latest command.
+		3. Answer best based on your specific role's capability and thinking processes, prioritizing the chairman's command if there is a shift in focus.
+		4. Avoid repeating or giving similar answers to what other participants have already stated; offer a unique perspective or a distinct, constructive critique.
 		If you have a clear recommendation, format it as 'DECISION: [your decision]' or 'ACTION: [specific action]'.
 		Keep it professional, concise, and focused on your specific role KPIs.";
 
