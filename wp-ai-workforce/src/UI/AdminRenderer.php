@@ -1836,6 +1836,17 @@ class AdminRenderer {
 							<p class="font-bold text-[#1e293b] mb-2 text-[10px] uppercase">Elite Workflow Example:</p>
 							<p class="text-xs">"Analyst (Step 1): Research Top 3 competitors. -> Copywriter (Step 2): Write better headlines than Step 1. -> WP Dev (Step 3): Create a landing page draft."</p>
 						</div>
+						<div class="p-4 rounded-xl bg-nexus-blue/5 border border-nexus-blue/10 font-sans">
+							<p class="font-bold text-[#1e293b] mb-2 text-[10px] uppercase">Initial Trigger Prompt Guide:</p>
+							<p class="text-xs mb-2">When you click <span class="text-accent font-bold">RUN</span>, the system displays a popup asking: <span class="italic text-gray-300">"Enter the initial trigger for this workflow execution:"</span></p>
+							<p class="text-[11px] leading-relaxed text-gray-400">This is the seed input or starting prompt passed directly to Step 1. In the popup window, you should enter the primary subject, competitor URL, or baseline topic you want the first agent to analyze.</p>
+							<p class="text-[11px] font-bold mt-2 text-nexus-blue uppercase">Trigger Examples to Enter:</p>
+							<ul class="list-disc list-inside text-[10px] space-y-1 mt-1 text-gray-400">
+								<li><span class="font-bold text-accent">Competitor Analysis:</span> "https://competitor.com/pricing"</li>
+								<li><span class="font-bold text-accent">SaaS Landing Page Idea:</span> "Write a SaaS product focused on automated email marketing"</li>
+								<li><span class="font-bold text-accent">SEO Content Focus:</span> "Target keyword: 'corporate accounting safety tools'"</li>
+							</ul>
+						</div>
 						<ul class="list-disc list-inside space-y-2 text-xs">
 							<li><span class="text-[#1e293b] font-bold">Chain Persistence:</span> Every agent in the workflow has full access to the previous step's output.</li>
 							<li><span class="text-[#1e293b] font-bold">Scale:</span> Run these workflows 24/7 to outperform human-only teams.</li>
