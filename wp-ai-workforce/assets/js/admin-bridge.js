@@ -431,8 +431,9 @@ function initNexusAdminBridge() {
                 saveBtn.classList.remove('bg-green-500');
                 saveBtn.classList.add('bg-accent');
             }
-            if (canvas) {
-                canvas.innerHTML = '<div class="text-center"><p class="text-gray-500 font-bold uppercase tracking-widest text-sm">Drop Agents Here to Initialize Sequence</p></div>';
+            const canvasEl = document.getElementById('nexus-workflow-canvas');
+            if (canvasEl) {
+                canvasEl.innerHTML = '<div class="text-center"><p class="text-gray-500 font-bold uppercase tracking-widest text-sm">Drop Agents Here to Initialize Sequence</p></div>';
             }
             const modal = document.getElementById('nexus-visual-builder-modal');
             if (modal) {
@@ -447,7 +448,7 @@ function initNexusAdminBridge() {
             const name = editWfBtn.dataset.name || '';
             let steps = [];
             try {
-                steps = JSON.parse(editWfBtn.dataset.definition);
+                steps = JSON.parse(atob(editWfBtn.dataset.definition));
             } catch (e) {
                 console.error("Failed to parse workflow steps", e);
             }
@@ -469,25 +470,28 @@ function initNexusAdminBridge() {
             }
 
             // Clear canvas and draw existing steps
-            if (canvas) {
-                canvas.innerHTML = '';
-                steps.forEach((stepData, index) => {
-                    const agentEl = document.querySelector(`.nexus-draggable-agent[data-id="${stepData.agent_id}"]`);
-                    const agentName = agentEl ? agentEl.querySelector('p').innerText : 'AI Agent';
+            const canvasEl = document.getElementById('nexus-workflow-canvas');
+            if (canvasEl) {
+                canvasEl.innerHTML = '';
+                if (Array.isArray(steps)) {
+                    steps.forEach((stepData, index) => {
+                        const agentEl = document.querySelector(`.nexus-draggable-agent[data-id="${stepData.agent_id}"]`);
+                        const agentName = (agentEl && agentEl.querySelector('p')) ? agentEl.querySelector('p').innerText : 'AI Agent';
 
-                    const step = document.createElement('div');
-                    step.className = 'nexus-workflow-step p-6 rounded-2xl bg-[#f8fafc] border border-nexus-violet animate-fade-in-up mb-4 w-72 shadow-xl relative z-10';
-                    step.dataset.agentId = stepData.agent_id;
-                    step.innerHTML = `
-                        <div class="flex justify-between items-center mb-3">
-                            <p class="text-nexus-violet font-bold text-xs uppercase tracking-widest">Step ${index + 1}</p>
-                            <button class="text-gray-600 hover:text-red-500 transition-colors nexus-step-delete">✕</button>
-                        </div>
-                        <p class="text-[#1e293b] font-bold">${escapeHTML(agentName)}</p>
-                        <textarea placeholder="Define task..." class="nexus-step-task w-full bg-white border border-nexus-border rounded-xl mt-3 p-3 text-xs text-[#1e293b] outline-none focus:border-nexus-violet h-20">${escapeHTML(stepData.task_description)}</textarea>
-                    `;
-                    canvas.appendChild(step);
-                });
+                        const step = document.createElement('div');
+                        step.className = 'nexus-workflow-step p-6 rounded-2xl bg-[#f8fafc] border border-nexus-violet animate-fade-in-up mb-4 w-72 shadow-xl relative z-10';
+                        step.dataset.agentId = stepData.agent_id;
+                        step.innerHTML = `
+                            <div class="flex justify-between items-center mb-3">
+                                <p class="text-nexus-violet font-bold text-xs uppercase tracking-widest">Step ${index + 1}</p>
+                                <button class="text-gray-600 hover:text-red-500 transition-colors nexus-step-delete">✕</button>
+                            </div>
+                            <p class="text-[#1e293b] font-bold">${escapeHTML(agentName)}</p>
+                            <textarea placeholder="Define task..." class="nexus-step-task w-full bg-white border border-nexus-border rounded-xl mt-3 p-3 text-xs text-[#1e293b] outline-none focus:border-nexus-violet h-20">${escapeHTML(stepData.task_description)}</textarea>
+                        `;
+                        canvasEl.appendChild(step);
+                    });
+                }
             }
             showToast('Workflow loaded for editing.');
         }
