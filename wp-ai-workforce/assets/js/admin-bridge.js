@@ -336,6 +336,7 @@ function initNexusAdminBridge() {
     }
 
     // --- 5. Visual Workflow Builder ---
+    let editingWorkflowId = 0;
     const canvas = document.getElementById('nexus-workflow-canvas');
     const draggables = document.querySelectorAll('.nexus-draggable-agent');
 
@@ -386,18 +387,35 @@ function initNexusAdminBridge() {
                 return;
             }
 
-            const payload = { steps: steps, name: 'Custom Workflow ' + Date.now() };
+            let workflowName = 'Custom Workflow ' + Date.now();
+            if (editingWorkflowId > 0) {
+                const existingName = saveWorkflowBtn.dataset.workflowName || 'Custom Workflow';
+                workflowName = prompt('Enter workflow name:', existingName) || existingName;
+            } else {
+                workflowName = prompt('Enter workflow name:', 'Custom Workflow') || workflowName;
+            }
 
-            nexusFetch('workflows', 'POST', payload).then((res) => {
-                if (res && (res.error || res.success === false)) {
-                    showToast(res.message || 'Failed to save workflow.', 'error');
-                } else {
-                    showToast('Multi-agent workflow orchestration saved.');
-                    setTimeout(() => window.location.reload(), 1000);
-                }
-            }).catch(err => {
-                // Fail silently or handle gracefully
-            });
+            const payload = { steps: steps, name: workflowName };
+
+            if (editingWorkflowId > 0) {
+                nexusFetch(`workflows/${editingWorkflowId}`, 'POST', { ...payload, _method: 'PUT' }).then((res) => {
+                    if (res && (res.error || res.success === false)) {
+                        showToast(res.message || 'Failed to update workflow.', 'error');
+                    } else {
+                        showToast('Multi-agent workflow orchestration updated.');
+                        setTimeout(() => window.location.reload(), 1000);
+                    }
+                }).catch(err => {});
+            } else {
+                nexusFetch('workflows', 'POST', payload).then((res) => {
+                    if (res && (res.error || res.success === false)) {
+                        showToast(res.message || 'Failed to save workflow.', 'error');
+                    } else {
+                        showToast('Multi-agent workflow orchestration saved.');
+                        setTimeout(() => window.location.reload(), 1000);
+                    }
+                }).catch(err => {});
+            }
         });
     }
 
@@ -405,11 +423,73 @@ function initNexusAdminBridge() {
     document.addEventListener('click', function(e) {
         // Modal Toggles (Improved with .closest)
         if (e.target.closest('#nexus-open-visual-builder')) {
+            editingWorkflowId = 0;
+            const saveBtn = document.getElementById('nexus-save-workflow-btn');
+            if (saveBtn) {
+                saveBtn.dataset.workflowName = '';
+                saveBtn.innerText = 'Save Workflow';
+                saveBtn.classList.remove('bg-green-500');
+                saveBtn.classList.add('bg-accent');
+            }
+            if (canvas) {
+                canvas.innerHTML = '<div class="text-center"><p class="text-gray-500 font-bold uppercase tracking-widest text-sm">Drop Agents Here to Initialize Sequence</p></div>';
+            }
             const modal = document.getElementById('nexus-visual-builder-modal');
             if (modal) {
                 modal.classList.remove('hidden');
-                modal.querySelector('.glass-panel').classList.add('modal-content-zoom');
+                modal.querySelector('.glass-panel')?.classList.add('modal-content-zoom');
             }
+        }
+
+        const editWfBtn = e.target.closest('.nexus-edit-workflow');
+        if (editWfBtn) {
+            const id = parseInt(editWfBtn.dataset.id) || 0;
+            const name = editWfBtn.dataset.name || '';
+            let steps = [];
+            try {
+                steps = JSON.parse(editWfBtn.dataset.definition);
+            } catch (e) {
+                console.error("Failed to parse workflow steps", e);
+            }
+
+            editingWorkflowId = id;
+            const saveBtn = document.getElementById('nexus-save-workflow-btn');
+            if (saveBtn) {
+                saveBtn.dataset.workflowName = name;
+                saveBtn.innerText = 'Update Workflow';
+                saveBtn.classList.remove('bg-accent');
+                saveBtn.classList.add('bg-green-500');
+            }
+
+            // Open visual builder modal
+            const modal = document.getElementById('nexus-visual-builder-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.querySelector('.glass-panel')?.classList.add('modal-content-zoom');
+            }
+
+            // Clear canvas and draw existing steps
+            if (canvas) {
+                canvas.innerHTML = '';
+                steps.forEach((stepData, index) => {
+                    const agentEl = document.querySelector(`.nexus-draggable-agent[data-id="${stepData.agent_id}"]`);
+                    const agentName = agentEl ? agentEl.querySelector('p').innerText : 'AI Agent';
+
+                    const step = document.createElement('div');
+                    step.className = 'nexus-workflow-step p-6 rounded-2xl bg-[#f8fafc] border border-nexus-violet animate-fade-in-up mb-4 w-72 shadow-xl relative z-10';
+                    step.dataset.agentId = stepData.agent_id;
+                    step.innerHTML = `
+                        <div class="flex justify-between items-center mb-3">
+                            <p class="text-nexus-violet font-bold text-xs uppercase tracking-widest">Step ${index + 1}</p>
+                            <button class="text-gray-600 hover:text-red-500 transition-colors nexus-step-delete">✕</button>
+                        </div>
+                        <p class="text-[#1e293b] font-bold">${escapeHTML(agentName)}</p>
+                        <textarea placeholder="Define task..." class="nexus-step-task w-full bg-white border border-nexus-border rounded-xl mt-3 p-3 text-xs text-[#1e293b] outline-none focus:border-nexus-violet h-20">${escapeHTML(stepData.task_description)}</textarea>
+                    `;
+                    canvas.appendChild(step);
+                });
+            }
+            showToast('Workflow loaded for editing.');
         }
         if (e.target.closest('#nexus-close-builder')) {
             document.getElementById('nexus-visual-builder-modal')?.classList.add('hidden');

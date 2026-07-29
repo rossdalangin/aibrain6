@@ -296,6 +296,24 @@ class RestHandler {
 
 		register_rest_route( $this->namespace, '/workflows/(?P<id>\d+)', [
 			[
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => function( \WP_REST_Request $request ) {
+					$id = (int) $request['id'];
+					$params = $request->get_params();
+					global $wpdb;
+					$wpdb->update(
+						$wpdb->prefix . 'ai_workflows',
+						[
+							'name'       => sanitize_text_field( $params['name'] ),
+							'definition' => wp_json_encode( $params['steps'] ),
+						],
+						[ 'id' => $id ]
+					);
+					return new \WP_REST_Response( [ 'success' => true ], 200 );
+				},
+				'permission_callback' => [ $this, 'check_permission' ],
+			],
+			[
 				'methods'             => WP_REST_Server::DELETABLE,
 				'callback'            => function( \WP_REST_Request $request ) {
 					$id = (int) $request['id'];
