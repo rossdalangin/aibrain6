@@ -44,7 +44,11 @@ class ExecutionEngine {
 			// Build comprehensive context from all previous steps
 			$context = "WORKFLOW STATE:\n";
 			foreach ( $state as $key => $val ) {
-				$context .= "[$key]: " . ( is_string($val) ? $val : json_encode($val) ) . "\n";
+				if ( is_array( $val ) && isset( $val['content'] ) ) {
+					$context .= "[$key]: " . $val['content'] . "\n";
+				} else {
+					$context .= "[$key]: " . ( is_string($val) ? $val : json_encode($val) ) . "\n";
+				}
 			}
 
 			$prompt = "You are participating in a multi-agent workflow.

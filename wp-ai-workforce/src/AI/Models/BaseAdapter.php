@@ -69,6 +69,17 @@ abstract class BaseAdapter implements AIModelInterface {
 			}
 		}
 
+		// Detect if we are in a workflow and extract task & trigger details
+		$workflow_task = '';
+		if ( preg_match( '/Current Task:\s*([^\n]+)/i', $user_msg, $task_matches ) ) {
+			$workflow_task = trim( $task_matches[1] );
+		}
+
+		$initial_trigger = '';
+		if ( preg_match( '/\[initial_trigger\]:\s*([^\n]+)/i', $user_msg, $it_matches ) ) {
+			$initial_trigger = trim( $it_matches[1] );
+		}
+
 		$agent_name     = 'AI Employee';
 		$agent_position = 'Specialist';
 		$agent_mission  = 'Execute tasks efficiently.';
@@ -123,8 +134,12 @@ abstract class BaseAdapter implements AIModelInterface {
 			$chairman_intervention = trim( $chairman_intervention );
 		}
 
-		// If we extracted specific agenda content, use that for topic extraction. Otherwise, fall back to clean user message.
-		$topic_source = ! empty( $agenda_content ) ? $agenda_content : $clean_user_msg;
+		// If we are in a workflow, use the initial trigger as the topic source. Otherwise, use agenda content or clean user message.
+		if ( ! empty( $initial_trigger ) ) {
+			$topic_source = $initial_trigger;
+		} else {
+			$topic_source = ! empty( $agenda_content ) ? $agenda_content : $clean_user_msg;
+		}
 
 		// Extract topic words from clean topic source for smart contextual reflection
 		$topic_words = [];
@@ -143,9 +158,17 @@ abstract class BaseAdapter implements AIModelInterface {
 		$lower_pos  = strtolower( $agent_position );
 
 		$is_greeting = preg_match( '/\b(hello|hi|hey|greetings|howdy|good morning|good afternoon)\b/i', $lower_msg ) || $lower_msg === 'hello' || $lower_msg === 'hi';
-		$is_roi       = strpos( $lower_msg, 'roi' ) !== false || strpos( $lower_msg, 'audit' ) !== false || strpos( $lower_msg, 'cost' ) !== false || strpos( $lower_msg, 'budget' ) !== false || strpos( $lower_msg, 'revenue' ) !== false || strpos( $lower_msg, 'pricing' ) !== false || strpos( $lower_msg, 'sales' ) !== false;
-		$is_marketing = strpos( $lower_msg, 'market' ) !== false || strpos( $lower_msg, 'growth' ) !== false || strpos( $lower_msg, 'ad' ) !== false || strpos( $lower_msg, 'storm' ) !== false || strpos( $lower_msg, 'brand' ) !== false || strpos( $lower_msg, 'copy' ) !== false || strpos( $lower_msg, 'headline' ) !== false;
-		$is_system    = strpos( $lower_msg, 'security' ) !== false || strpos( $lower_msg, 'scale' ) !== false || strpos( $lower_msg, 'latency' ) !== false || strpos( $lower_msg, 'technical' ) !== false || strpos( $lower_msg, 'debt' ) !== false || strpos( $lower_msg, 'architecture' ) !== false || strpos( $lower_msg, 'rag' ) !== false || strpos( $lower_msg, 'code' ) !== false || strpos( $lower_msg, 'database' ) !== false || strpos( $lower_msg, 'api' ) !== false;
+
+		if ( ! empty( $initial_trigger ) ) {
+			$lower_trigger = strtolower( $initial_trigger );
+			$is_roi = ( strpos( $lower_trigger, 'roi' ) !== false || strpos( $lower_trigger, 'audit' ) !== false || strpos( $lower_trigger, 'cost' ) !== false || strpos( $lower_trigger, 'pricing' ) !== false || strpos( $lower_trigger, 'refund' ) !== false || strpos( $lower_trigger, 'budget' ) !== false || strpos( $lower_trigger, 'revenue' ) !== false || strpos( $lower_trigger, 'sales' ) !== false );
+			$is_marketing = ( strpos( $lower_trigger, 'market' ) !== false || strpos( $lower_trigger, 'growth' ) !== false || strpos( $lower_trigger, 'ad' ) !== false || strpos( $lower_trigger, 'seo' ) !== false || strpos( $lower_trigger, 'copy' ) !== false || strpos( $lower_trigger, 'headline' ) !== false || strpos( $lower_trigger, 'storm' ) !== false || strpos( $lower_trigger, 'brand' ) !== false );
+			$is_system = ( strpos( $lower_trigger, 'security' ) !== false || strpos( $lower_trigger, 'scale' ) !== false || strpos( $lower_trigger, 'cache' ) !== false || strpos( $lower_trigger, 'database' ) !== false || strpos( $lower_trigger, 'api' ) !== false || strpos( $lower_trigger, 'code' ) !== false || strpos( $lower_trigger, 'system' ) !== false || strpos( $lower_trigger, 'latency' ) !== false || strpos( $lower_trigger, 'technical' ) !== false || strpos( $lower_trigger, 'debt' ) !== false || strpos( $lower_trigger, 'architecture' ) !== false || strpos( $lower_trigger, 'rag' ) !== false );
+		} else {
+			$is_roi       = strpos( $lower_msg, 'roi' ) !== false || strpos( $lower_msg, 'audit' ) !== false || strpos( $lower_msg, 'cost' ) !== false || strpos( $lower_msg, 'budget' ) !== false || strpos( $lower_msg, 'revenue' ) !== false || strpos( $lower_msg, 'pricing' ) !== false || strpos( $lower_msg, 'sales' ) !== false;
+			$is_marketing = strpos( $lower_msg, 'market' ) !== false || strpos( $lower_msg, 'growth' ) !== false || strpos( $lower_msg, 'ad' ) !== false || strpos( $lower_msg, 'storm' ) !== false || strpos( $lower_msg, 'brand' ) !== false || strpos( $lower_msg, 'copy' ) !== false || strpos( $lower_msg, 'headline' ) !== false;
+			$is_system    = strpos( $lower_msg, 'security' ) !== false || strpos( $lower_msg, 'scale' ) !== false || strpos( $lower_msg, 'latency' ) !== false || strpos( $lower_msg, 'technical' ) !== false || strpos( $lower_msg, 'debt' ) !== false || strpos( $lower_msg, 'architecture' ) !== false || strpos( $lower_msg, 'rag' ) !== false || strpos( $lower_msg, 'code' ) !== false || strpos( $lower_msg, 'database' ) !== false || strpos( $lower_msg, 'api' ) !== false;
+		}
 
 		// Deterministic hash based on agent and request to select unique templates and prevent repetitive output
 		$hash = abs(crc32($agent_name . $clean_user_msg));
@@ -314,6 +337,19 @@ BEST SOLUTION: Set a strict 48-hour time limit on all technical and operational 
 				"To deliver top results here, we should simplify our workflow for '{$extracted_topic}', focus on our high-impact milestones first, and keep our team communications open and straightforward."
 			];
 			$reply_body = $templates[ $hash % count($templates) ];
+		}
+
+		// Dynamically inject workflow-specific reasoning and response openers
+		if ( ! empty( $initial_trigger ) ) {
+			array_unshift( $reasoning_steps, "Align my response with the active workflow trigger '{$initial_trigger}' and the task objective '{$workflow_task}' using my {$agent_position} expertise." );
+
+			$workflow_intros = [
+				"Processing our workflow trigger '{$initial_trigger}' for the task '{$workflow_task}': ",
+				"Directly addressing our initial trigger '{$initial_trigger}' to execute '{$workflow_task}': ",
+				"In response to the workflow trigger '{$initial_trigger}', I have analyzed '{$workflow_task}' and recommend: "
+			];
+			$wf_intro = $workflow_intros[ $hash % count($workflow_intros) ];
+			$reply_body = $wf_intro . lcfirst($reply_body);
 		}
 
 		// Deeply analyze chairman command and check relevancy to the Strategic Agenda
