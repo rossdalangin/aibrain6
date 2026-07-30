@@ -330,7 +330,10 @@ class RestHandler {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => function( \WP_REST_Request $request ) {
 					$id = (int) $request['id'];
-					$params = $request->get_params();
+					$params = $request->get_params() ?: [];
+					$json_params = $request->get_json_params() ?: [];
+					$trigger_input = isset( $params['input'] ) ? $params['input'] : ( isset( $json_params['input'] ) ? $json_params['input'] : '' );
+
 					$repo = new \NexusAI\Workforce\Repositories\WorkflowRepository();
 					$workflow = $repo->get_by_id( $id );
 
@@ -344,7 +347,7 @@ class RestHandler {
 					$steps = is_array( $decoded ) ? ( isset( $decoded['steps'] ) ? $decoded['steps'] : $decoded ) : [];
 
 					$engine = new \NexusAI\Workforce\AI\Workflows\ExecutionEngine();
-					$result = $engine->run( [ 'steps' => $steps ], $params['input'] ?? '' );
+					$result = $engine->run( [ 'steps' => $steps ], $trigger_input );
 
 					return new \WP_REST_Response( $result, 200 );
 				},
