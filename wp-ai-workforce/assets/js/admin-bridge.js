@@ -448,9 +448,18 @@ function initNexusAdminBridge() {
             const name = editWfBtn.dataset.name || '';
             let steps = [];
             try {
-                steps = JSON.parse(decodeURIComponent(escape(atob(editWfBtn.dataset.definition))));
+                const binString = atob(editWfBtn.dataset.definition);
+                const bytes = new Uint8Array(binString.length);
+                for (let i = 0; i < binString.length; i++) {
+                    bytes[i] = binString.charCodeAt(i);
+                }
+                const decoded = new TextDecoder().decode(bytes);
+                steps = JSON.parse(decoded);
             } catch (e) {
                 console.error("Failed to parse workflow steps", e);
+                try {
+                    steps = JSON.parse(atob(editWfBtn.dataset.definition));
+                } catch (err) {}
             }
 
             editingWorkflowId = id;
