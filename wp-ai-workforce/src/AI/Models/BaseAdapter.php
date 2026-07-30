@@ -183,6 +183,197 @@ abstract class BaseAdapter implements AIModelInterface {
 				"Invite active boardroom debate on how we can drive results."
 			];
 			$reply_body = "Hi there! {$agent_name} here, stepping in as your {$agent_position}. My primary mission is to: '{$agent_mission}'. Armed with a core background in {$agent_skills}, I am entirely focused on helping us drive key success targets like {$agent_kpis}. Let's collaborate—what key strategic objectives can we tackle together today?";
+		} elseif ( strpos( $lower_pos, 'analyst' ) !== false ) {
+			// Highly detailed Analyst templates with comparative grids
+			$reasoning_steps = [
+				"In-depth analysis of the trigger '{$initial_trigger}' and competitor landscape.",
+				"Map out a comprehensive comparison table of features, pricing structures, and conversion funnels.",
+				"Identify major UX conversion friction points and outline a structural recommendation."
+			];
+
+			$templates = [
+				"### COMPETITOR RESEARCH REPORT & ANALYSIS
+Target URL/Concept: **{$initial_trigger}**
+Prepared by: **{$agent_name} ({$agent_position})**
+
+| Competitor Feature | Their Pricing | Core Value Prop | Friction Point / Opportunity |
+| :--- | :--- | :--- | :--- |
+| Standard SaaS Plan | $49/mo | Basic tracking templates | High onboarding setup time; no real-time AI |
+| Premium Enterprise | $199/mo | Multi-user custom seats | Locked behind mandatory 'Book a Demo' calls |
+| Basic Entry Tier | $19/mo | Single integration limit | Extremely basic reporting with no raw csv exports |
+
+#### Key Strategic Opportunities:
+1. **Zero Onboarding Friction:** By offering instant setup with pre-built templates, we can capture the 35% of users who drop off during competitor configurations.
+2. **Interactive Pricing Grid:** Keep checkout completely transparent instead of forcing enterprise demo calls.
+3. **Automated AI Optimization:** Position our real-time multi-agent workflows as our main differentiator.
+
+WARNING: Directly mimicking competitor pricing without a strong, visible differentiator will lead to high price-sensitivity and churn.
+BEST SOLUTION: Highlight our 14-day Risk-Free Guarantee and provide pre-seeded templates right inside the onboarding flow to prove instant value.",
+
+				"### MARKET COMPETITIVE INTELLIGENCE BRIEF
+Topic: **{$initial_trigger}**
+Prepared by: **{$agent_name} ({$agent_position})**
+
+| Evaluation Parameter | Competitor Current Setup | Our Recommended Strategic Pivot |
+| :--- | :--- | :--- |
+| **Hero Copy Value Prop** | Focused on generic operational efficiency | Benefit-driven, ROAS-focused positioning |
+| **CTA Conversions** | Standard multi-step form fields | Instant single-sign-on (SSO) one-click access |
+| **System Onboarding** | Average 12-minute guide completion | Seeding interactive tutorials with pre-built checklists |
+
+WARNING: Standard multi-step checkout sequences lose up to 40% of mobile buyers.
+BEST SOLUTION: Streamline our CTA checkout with clean single-click express payment buttons (Apple Pay, Stripe Express) to maximize mobile conversion rates."
+			];
+			$reply_body = $templates[ $hash % count($templates) ];
+		} elseif ( strpos( $lower_pos, 'copywriter' ) !== false || strpos( $lower_pos, 'writer' ) !== false ) {
+			// Highly-persuasive Copywriter templates with actual ad and landing page headlines
+			$reasoning_steps = [
+				"Deconstruct consumer behavioral triggers and primary objections for '{$extracted_topic}'.",
+				"Craft conversion-focused benefit-driven headlines to maximize CTR.",
+				"Write clear, highly-persuasive body copy and frictionless Call-To-Action (CTA) triggers."
+			];
+
+			$templates = [
+				"### CONVERSION-OPTIMIZED COPYWRITING BRIEF
+Project Focus: **{$initial_trigger}**
+Target Persona: **Enterprise Decision Makers & Agency Owners**
+
+#### 1. HERO SECTION HEADLINES (3 Options):
+* **Option A (ROAS Focused):** \"Deploy an Entire AI Workforce Overnight. Cut Labor Costs by 70%.\"
+* **Option B (Strategic/Authority):** \"The Enterprise AI Operating System for High-Scale Agencies.\"
+* **Option C (Friction-Free):** \"Hire Specialized AI Executives in 1-Click. No Setup. Instant ROI.\"
+
+#### 2. BENEFIT-DRIVEN SUBHEADLINE:
+* \"Bring world-class corporate IQ to your daily operations. Each agent is pre-configured with battle-tested SOPs, first-principles reasoning, and shared centralized memory to deliver high-impact results, 24/7.\"
+
+#### 3. CONVERSION CALL-TO-ACTION (CTA) BUTTONS:
+* **Primary:** \"Deploy Your First Agent Free →\"
+* **Secondary:** \"Watch 2-Minute Demo\"
+
+WARNING: Generic, feature-heavy copy fails to connect emotionally and yields low conversion rates.
+BEST SOLUTION: Use direct benefit-driven hooks focusing on tangible annual labor savings and operational speed to maximize conversions.",
+
+				"### CONVERSION HEADLINE & LANDING PAGE COPY DELIVERABLE
+Target Concept: **{$initial_trigger}**
+Tone Profile: **Sophisticated, High-Velocity, Convincing**
+
+#### HERO HEADLINE:
+* \"Stop Managing Tasks. Start Orchestrating Growth. Meet Your New AI Executive Suite.\"
+
+#### SUPPORTING VALUE PROPOSITION:
+* \"Why hire expensive agencies when you can deploy specialized AI CMOs, CSOs, and developers trained on your business data? Experience seamless multi-agent workflows that run continuously in the background to build, optimize, and deliver.\"
+
+#### CORE CALL TO ACTION (CTA):
+* \"Start 14-Day Free Trial (SSO Enabled)\"
+
+WARNING: Long, dense paragraphs trigger immediate visual fatigue and increase visitor bounce rates.
+BEST SOLUTION: Structure all supporting copy using clean, 3-sentence maximum paragraphs and short, bulleted feature tables."
+			];
+			$reply_body = $templates[ $hash % count($templates) ];
+		} elseif ( strpos( $lower_pos, 'dev' ) !== false || strpos( $lower_pos, 'developer' ) !== false || strpos( $lower_pos, 'engineer' ) !== false || strpos( $lower_pos, 'architect' ) !== false ) {
+			// Meticulous Web Dev / Developer templates with actual clean HTML and Tailwind CSS code blocks
+			$reasoning_steps = [
+				"Audit performance overhead and select lightweight, semantic HTML structures.",
+				"Implement modern Tailwind CSS utility classes to achieve premium SaaS layout standards.",
+				"Ensure full responsiveness, interactive visual components, and secure CTA triggers."
+			];
+
+			$templates = [
+				"### HIGH-PERFORMANCE LANDING PAGE CODE BRIEF
+Project/Concept: **{$initial_trigger}**
+Framework Stack: **HTML5, Tailwind CSS, Vanilla JS (Zero Dependencies)**
+
+```html
+<!-- Hero Section -->
+<section class=\"relative bg-[#f8fafc] text-slate-900 overflow-hidden py-24 px-8 border-b border-slate-100\">
+  <div class=\"max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center\">
+    <!-- Left Column: Copy -->
+    <div class=\"space-y-6\">
+      <span class=\"inline-block bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full\">
+        v1.2 Active Sandbox
+      </span>
+      <h1 class=\"text-5xl font-black tracking-tight text-slate-900 leading-none\">
+        Deploy Your Entire <span class=\"text-indigo-600\">AI Workforce</span> Overnight.
+      </h1>
+      <p class=\"text-lg text-slate-600 leading-relaxed max-w-lg\">
+        Stop wasting budget. Hire specialized AI executives trained to dismantle complex business problems, collaborate, and automate growth.
+      </p>
+      <!-- CTA Buttons -->
+      <div class=\"flex gap-4 items-center pt-2\">
+        <a href=\"#\" class=\"bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-indigo-200\">
+          Deploy Free Agent →
+        </a>
+        <a href=\"#\" class=\"bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-4 px-8 rounded-xl transition-all\">
+          Watch Demo
+        </a>
+      </div>
+    </div>
+    <!-- Right Column: Interactive Frame Preview -->
+    <div class=\"relative bg-white border border-slate-200 rounded-3xl p-8 shadow-2xl\">
+      <div class=\"flex justify-between items-center mb-6 pb-4 border-b border-slate-100\">
+        <div class=\"flex gap-2\">
+          <span class=\"w-3 h-3 rounded-full bg-red-400\"></span>
+          <span class=\"w-3 h-3 rounded-full bg-yellow-400\"></span>
+          <span class=\"w-3 h-3 rounded-full bg-green-400\"></span>
+        </div>
+        <span class=\"text-xs text-slate-400 font-mono\">AI_Orchestrator.php</span>
+      </div>
+      <div class=\"space-y-4\">
+        <div class=\"p-4 rounded-xl bg-slate-50 border border-slate-100 font-mono text-xs text-indigo-600\">
+          [Trigger]: \"{$initial_trigger}\"
+        </div>
+        <div class=\"p-4 rounded-xl bg-slate-50 border border-slate-100 font-mono text-xs text-emerald-600\">
+          [Analyst]: Competitor pricing models evaluated. Opportunities matched.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+WARNING: Over-reliance on third-party tracking scripts can degrade landing page load speed and hurt conversions.
+BEST SOLUTION: Use lightweight, native asynchronous server-side session endpoints instead of synchronous external trackers.",
+
+				"### PERFORMANCE-OPTIMIZED UI COMPONENT
+Target Component: **Features Grid for {$initial_trigger}**
+Styling Engine: **Tailwind Utility Classes**
+
+```html
+<!-- Features Grid -->
+<div class=\"py-20 px-6 bg-white\">
+  <div class=\"max-w-6xl mx-auto\">
+    <h2 class=\"text-center text-3xl font-black tracking-tight mb-12 text-slate-900\">
+      Engineered for High-Velocity Operational Delivery
+    </h2>
+    <div class=\"grid grid-cols-1 md:grid-cols-3 gap-8\">
+      <!-- Feature Card 1 -->
+      <div class=\"p-8 rounded-2xl border border-slate-200 hover:border-indigo-500 transition-all group hover:shadow-xl\">
+        <div class=\"w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:scale-110 transition-transform\">
+          🧠
+        </div>
+        <h3 class=\"text-xl font-bold mb-2\">Shared Company Memory</h3>
+        <p class=\"text-sm text-slate-500 leading-relaxed\">
+          Give your agents unified, multi-tiered access to your corporate PDFs, SOPs, and pricing libraries.
+        </p>
+      </div>
+      <!-- Feature Card 2 -->
+      <div class=\"p-8 rounded-2xl border border-slate-200 hover:border-emerald-500 transition-all group hover:shadow-xl\">
+        <div class=\"w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:scale-110 transition-transform\">
+          🔗
+        </div>
+        <h3 class=\"text-xl font-bold mb-2\">Multi-Agent Workflows</h3>
+        <p class=\"text-sm text-slate-500 leading-relaxed\">
+          Chain specialized agents together into automated sequential relays to execute complex strategic sequences.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+WARNING: Unoptimized images or custom fonts will delay Page Speed score index.
+BEST SOLUTION: Preload high-priority images, lazy-load secondary background frames, and leverage native system font stacks."
+			];
+			$reply_body = $templates[ $hash % count($templates) ];
 		} elseif ( $is_roi ) {
 			$reasoning_steps = [
 				"Critically analyze the financial variables concerning '{$extracted_topic}' to optimize returns.",
