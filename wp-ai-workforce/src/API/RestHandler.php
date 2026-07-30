@@ -296,7 +296,7 @@ class RestHandler {
 
 		register_rest_route( $this->namespace, '/workflows/(?P<id>\d+)', [
 			[
-				'methods'             => WP_REST_Server::EDITABLE,
+				'methods'             => [ WP_REST_Server::EDITABLE, WP_REST_Server::CREATABLE ],
 				'callback'            => function( \WP_REST_Request $request ) {
 					$id = (int) $request['id'];
 					$params = $request->get_params();

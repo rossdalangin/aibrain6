@@ -448,7 +448,7 @@ function initNexusAdminBridge() {
             const name = editWfBtn.dataset.name || '';
             let steps = [];
             try {
-                steps = JSON.parse(atob(editWfBtn.dataset.definition));
+                steps = JSON.parse(decodeURIComponent(escape(atob(editWfBtn.dataset.definition))));
             } catch (e) {
                 console.error("Failed to parse workflow steps", e);
             }
