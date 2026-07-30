@@ -713,8 +713,14 @@ function initNexusAdminBridge() {
 
             nexusFetch(`workflows/run/${id}`, 'POST', { input: input }).then(res => {
                 log.innerHTML = '';
+                if (!res || !res.results || !Array.isArray(res.results)) {
+                    const errMsg = (res && res.message) ? res.message : 'Unknown server or timeout error.';
+                    log.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold">Execution Failed: ${escapeHTML(errMsg)}</div>`;
+                    showToast('Workflow execution failed.', 'error');
+                    return;
+                }
                 res.results.forEach((step, idx) => {
-                    const outputContent = typeof step.output === 'object' ? step.output.content : step.output;
+                    const outputContent = ((typeof step.output === 'object' ? step.output.content : step.output) || step.error || '');
                     const usage = (typeof step.output === 'object' && step.output.usage) ? step.output.usage : null;
                     const promptTokens = usage ? usage.prompt_tokens : 0;
                     const compTokens = usage ? usage.completion_tokens : 0;
@@ -722,9 +728,9 @@ function initNexusAdminBridge() {
 
                     // Parse Reasoning vs Final Response
                     let reasoningHtml = '';
-                    let finalResponseHtml = outputContent;
+                    let finalResponseHtml = outputContent || '';
 
-                    if (outputContent.includes('Reasoning:') && outputContent.includes('Final Response:')) {
+                    if (outputContent && typeof outputContent === 'string' && outputContent.includes('Reasoning:') && outputContent.includes('Final Response:')) {
                         const parts = outputContent.split('Final Response:');
                         const reasoningPart = parts[0].replace('Reasoning:', '').trim();
                         const finalPart = parts[1].trim();
