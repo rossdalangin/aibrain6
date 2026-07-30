@@ -28,11 +28,20 @@ class ExecutionEngine {
 	public function run( array $workflow_definition, string $input ): array {
 		$state = [ 'initial_trigger' => $input ];
 		$results = [];
+		$total_prompt_tokens = 0;
+		$total_completion_tokens = 0;
+		$total_cost = 0.00;
+		$total_start_time = microtime( true );
+
+		( new \NexusAI\Workforce\Utils\AuditLogger() )->log( 'workflow_started', "Started workflow execution with trigger: " . substr( $input, 0, 100 ) );
 
 		$steps = isset( $workflow_definition['steps'] ) ? $workflow_definition['steps'] : [];
 		if ( ! is_array( $steps ) ) {
 			$steps = [];
 		}
+
+		$cost_calc = new \NexusAI\Workforce\Utils\CostCalculator();
+		$usage_repo = new \NexusAI\Workforce\Repositories\UsageLogRepository();
 
 		foreach ( $steps as $index => $step ) {
 			$agent_id = (int) $step['agent_id'];
@@ -63,7 +72,32 @@ class ExecutionEngine {
 
 			Produce your output based on your specific role and the current workflow state.";
 
+			$step_start_time = microtime( true );
 			$output = $orchestrator->process_request( $prompt, $agent );
+			$elapsed_seconds = round( microtime( true ) - $step_start_time, 2 );
+
+			// Parse metrics and log usage
+			$prompt_tokens = $output['usage']['prompt_tokens'] ?? 0;
+			$comp_tokens   = $output['usage']['completion_tokens'] ?? 0;
+			$model         = $agent['model'] ?? 'gpt-4o';
+			$cost          = $cost_calc->calculate( $model, $prompt_tokens, $comp_tokens );
+
+			$total_prompt_tokens     += $prompt_tokens;
+			$total_completion_tokens += $comp_tokens;
+			$total_cost              += $cost;
+
+			$usage_repo->log_usage( [
+				'employee_id'       => $agent_id,
+				'model'             => $model,
+				'prompt_tokens'     => $prompt_tokens,
+				'completion_tokens' => $comp_tokens,
+				'cost'              => $cost,
+			] );
+
+			// Inject elapsed time in output array for frontend consumption
+			if ( is_array( $output ) ) {
+				$output['elapsed_seconds'] = $elapsed_seconds;
+			}
 
 			$step_name = $step['name'] ?? "Step_" . ($index + 1);
 			$results[] = [
@@ -75,10 +109,18 @@ class ExecutionEngine {
 			$state[ $step_name ] = $output;
 		}
 
+		$total_elapsed_time = round( microtime( true ) - $total_start_time, 2 );
+
+		( new \NexusAI\Workforce\Utils\AuditLogger() )->log( 'workflow_completed', "Completed workflow execution with " . count( $results ) . " steps. Total Cost: $" . number_format($total_cost, 5) );
+
 		return [
-			'status'  => 'completed',
-			'final_state' => $state,
-			'results' => $results,
+			'status'             => 'completed',
+			'final_state'        => $state,
+			'results'            => $results,
+			'total_prompt'       => $total_prompt_tokens,
+			'total_completion'   => $total_completion_tokens,
+			'total_cost'         => $total_cost,
+			'total_elapsed_time' => $total_elapsed_time,
 		];
 	}
 

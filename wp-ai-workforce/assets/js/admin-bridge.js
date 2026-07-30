@@ -719,9 +719,39 @@ function initNexusAdminBridge() {
                     showToast('Workflow execution failed.', 'error');
                     return;
                 }
+
+                // Render beautiful total summary card
+                const totalTokens = (res.total_prompt || 0) + (res.total_completion || 0);
+                const totalCost = (res.total_cost || 0).toFixed(5);
+                const totalTime = (res.total_elapsed_time || 0).toFixed(2);
+
+                log.innerHTML = `
+                    <div class="glass-panel p-6 rounded-3xl border border-accent/20 bg-accent/5 mb-10 flex flex-wrap gap-8 justify-between items-center animate-fade-in-up">
+                        <div>
+                            <h3 class="text-xs font-bold text-accent uppercase tracking-widest mb-1">Workflow Orchestration Summary</h3>
+                            <p class="text-xs text-gray-400">Sequential multi-agent relay concluded successfully.</p>
+                        </div>
+                        <div class="flex gap-8">
+                            <div class="text-right">
+                                <p class="text-[10px] text-gray-500 uppercase font-bold">Total Time</p>
+                                <p class="text-xl font-black text-[#1e293b]">${totalTime}s</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] text-gray-500 uppercase font-bold">Tokens Used</p>
+                                <p class="text-xl font-black text-[#1e293b]">${totalTokens}</p>
+                            </div>
+                            <div class="text-right text-green-500">
+                                <p class="text-[10px] text-gray-500 uppercase font-bold">Total Cost</p>
+                                <p class="text-xl font-black">$${totalCost}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
                 res.results.forEach((step, idx) => {
                     const outputContent = ((typeof step.output === 'object' ? step.output.content : step.output) || step.error || '');
                     const usage = (typeof step.output === 'object' && step.output.usage) ? step.output.usage : null;
+                    const elapsed = (typeof step.output === 'object' && step.output.elapsed_seconds) ? step.output.elapsed_seconds : 0;
                     const promptTokens = usage ? usage.prompt_tokens : 0;
                     const compTokens = usage ? usage.completion_tokens : 0;
                     const cost = ((promptTokens * 0.000005) + (compTokens * 0.000015)).toFixed(5);
@@ -761,7 +791,7 @@ function initNexusAdminBridge() {
                                     <div class="flex gap-3 items-center">
                                         ${usage ? `
                                             <span class="bg-[#f8fafc]/5 border border-white/5 text-[9px] px-3 py-1 rounded-full text-gray-400 font-mono">
-                                                Tokens: ${promptTokens + compTokens} | Cost: $${cost}
+                                                Time: ${elapsed.toFixed(2)}s | Tokens: ${promptTokens + compTokens} | Cost: $${cost}
                                             </span>
                                         ` : ''}
                                         <button class="bg-accent/10 hover:bg-accent text-accent hover:text-[#1e293b] border border-accent/20 text-[10px] font-bold px-4 py-2 rounded-xl transition-all" onclick="navigator.clipboard.writeText(\`${finalResponseHtml.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`); showToast('Pruned specialist response copied.')">Copy Output</button>
