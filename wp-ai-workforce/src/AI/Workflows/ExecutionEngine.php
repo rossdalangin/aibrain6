@@ -29,7 +29,12 @@ class ExecutionEngine {
 		$state = [ 'initial_trigger' => $input ];
 		$results = [];
 
-		foreach ( $workflow_definition['steps'] as $index => $step ) {
+		$steps = isset( $workflow_definition['steps'] ) ? $workflow_definition['steps'] : [];
+		if ( ! is_array( $steps ) ) {
+			$steps = [];
+		}
+
+		foreach ( $steps as $index => $step ) {
 			$agent_id = (int) $step['agent_id'];
 			$task     = $step['task_description'];
 

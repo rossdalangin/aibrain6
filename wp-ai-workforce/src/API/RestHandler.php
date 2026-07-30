@@ -336,8 +336,15 @@ class RestHandler {
 
 					if ( ! $workflow ) return new \WP_REST_Response( [ 'message' => 'Workflow not found' ], 404 );
 
+					$definition = stripslashes( $workflow['definition'] );
+					$decoded = json_decode( $definition, true );
+					if ( is_string( $decoded ) ) {
+						$decoded = json_decode( $decoded, true );
+					}
+					$steps = is_array( $decoded ) ? ( isset( $decoded['steps'] ) ? $decoded['steps'] : $decoded ) : [];
+
 					$engine = new \NexusAI\Workforce\AI\Workflows\ExecutionEngine();
-					$result = $engine->run( [ 'steps' => json_decode( stripslashes( $workflow['definition'] ), true ) ], $params['input'] ?? '' );
+					$result = $engine->run( [ 'steps' => $steps ], $params['input'] ?? '' );
 
 					return new \WP_REST_Response( $result, 200 );
 				},
