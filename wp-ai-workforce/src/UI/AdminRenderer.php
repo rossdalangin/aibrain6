@@ -1846,6 +1846,10 @@ class AdminRenderer {
 								<li><span class="font-bold text-accent">Competitor Analysis:</span> "https://competitor.com/pricing"</li>
 								<li><span class="font-bold text-accent">SaaS Landing Page Idea:</span> "Write a SaaS product focused on automated email marketing"</li>
 								<li><span class="font-bold text-accent">SEO Content Focus:</span> "Target keyword: 'corporate accounting safety tools'"</li>
+								<li><span class="font-bold text-accent">Lead Nurturing Campaign:</span> "Create a 5-day welcome email sequence for high-intent SaaS trial signups"</li>
+								<li><span class="font-bold text-accent">Product Launch Campaign:</span> "Brand positioning and launch plan for our new AI-powered Graphic Designer"</li>
+								<li><span class="font-bold text-accent">Customer Churn Audit:</span> "Analyze quarterly feedback pointing to checkout speed and interface confusion issues"</li>
+								<li><span class="font-bold text-accent">ROAS & Media Buy Audit:</span> "Evaluate underperforming Facebook ad campaigns with high CTR but low checkouts"</li>
 							</ul>
 						</div>
 						<ul class="list-disc list-inside space-y-2 text-xs">
