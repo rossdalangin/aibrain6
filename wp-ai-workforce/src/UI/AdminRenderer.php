@@ -1208,13 +1208,13 @@ class AdminRenderer {
 									<h3 class="font-bold text-[#1e293b] group-hover:text-accent"><?php echo esc_html( $wf['name'] ); ?></h3>
 									<div class="flex gap-2">
 										<button class="bg-accent/20 text-accent text-[10px] font-bold px-2 py-1 rounded nexus-run-workflow" data-id="<?php echo (int) $wf['id']; ?>">RUN</button>
-										<button class="bg-blue-500/10 text-blue-500 text-[10px] font-bold px-2 py-1 rounded hover:bg-blue-500 hover:text-white transition-all nexus-edit-workflow" data-id="<?php echo (int) $wf['id']; ?>" data-name="<?php echo esc_attr( $wf['name'] ); ?>" data-definition="<?php echo esc_attr( base64_encode( $wf['definition'] ) ); ?>">EDIT</button>
+										<button class="bg-blue-500/10 text-blue-500 text-[10px] font-bold px-2 py-1 rounded hover:bg-blue-500 hover:text-white transition-all nexus-edit-workflow" data-id="<?php echo (int) $wf['id']; ?>" data-name="<?php echo esc_attr( $wf['name'] ); ?>" data-definition="<?php echo esc_attr( base64_encode( stripslashes( $wf['definition'] ) ) ); ?>">EDIT</button>
 										<button class="bg-red-500/10 text-red-500 text-[10px] font-bold px-2 py-1 rounded hover:bg-red-500 hover:text-[#1e293b] transition-all nexus-delete-workflow" data-id="<?php echo (int) $wf['id']; ?>">✕</button>
 									</div>
 								</div>
 								<p class="text-xs text-gray-500 mt-2 uppercase tracking-tighter">Chain: <?php
-									$steps = json_decode($wf['definition'], true);
-									echo count($steps);
+									$steps = json_decode( stripslashes( $wf['definition'] ), true );
+									echo is_array( $steps ) ? count( $steps ) : 0;
 								?> Specialized Agents</p>
 							</div>
 						<?php endforeach; ?>
