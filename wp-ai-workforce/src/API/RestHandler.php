@@ -296,6 +296,24 @@ class RestHandler {
 
 		register_rest_route( $this->namespace, '/workflows/(?P<id>\d+)', [
 			[
+				'methods'             => [ WP_REST_Server::EDITABLE, WP_REST_Server::CREATABLE ],
+				'callback'            => function( \WP_REST_Request $request ) {
+					$id = (int) $request['id'];
+					$params = $request->get_params();
+					global $wpdb;
+					$wpdb->update(
+						$wpdb->prefix . 'ai_workflows',
+						[
+							'name'       => sanitize_text_field( $params['name'] ),
+							'definition' => wp_json_encode( $params['steps'] ),
+						],
+						[ 'id' => $id ]
+					);
+					return new \WP_REST_Response( [ 'success' => true ], 200 );
+				},
+				'permission_callback' => [ $this, 'check_permission' ],
+			],
+			[
 				'methods'             => WP_REST_Server::DELETABLE,
 				'callback'            => function( \WP_REST_Request $request ) {
 					$id = (int) $request['id'];
@@ -318,8 +336,15 @@ class RestHandler {
 
 					if ( ! $workflow ) return new \WP_REST_Response( [ 'message' => 'Workflow not found' ], 404 );
 
+					$definition = stripslashes( $workflow['definition'] );
+					$decoded = json_decode( $definition, true );
+					if ( is_string( $decoded ) ) {
+						$decoded = json_decode( $decoded, true );
+					}
+					$steps = is_array( $decoded ) ? ( isset( $decoded['steps'] ) ? $decoded['steps'] : $decoded ) : [];
+
 					$engine = new \NexusAI\Workforce\AI\Workflows\ExecutionEngine();
-					$result = $engine->run( [ 'steps' => json_decode( $workflow['definition'], true ) ], $params['input'] ?? '' );
+					$result = $engine->run( [ 'steps' => $steps ], $params['input'] ?? '' );
 
 					return new \WP_REST_Response( $result, 200 );
 				},

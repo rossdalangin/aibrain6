@@ -29,7 +29,12 @@ class ExecutionEngine {
 		$state = [ 'initial_trigger' => $input ];
 		$results = [];
 
-		foreach ( $workflow_definition['steps'] as $index => $step ) {
+		$steps = isset( $workflow_definition['steps'] ) ? $workflow_definition['steps'] : [];
+		if ( ! is_array( $steps ) ) {
+			$steps = [];
+		}
+
+		foreach ( $steps as $index => $step ) {
 			$agent_id = (int) $step['agent_id'];
 			$task     = $step['task_description'];
 
@@ -44,7 +49,11 @@ class ExecutionEngine {
 			// Build comprehensive context from all previous steps
 			$context = "WORKFLOW STATE:\n";
 			foreach ( $state as $key => $val ) {
-				$context .= "[$key]: " . ( is_string($val) ? $val : json_encode($val) ) . "\n";
+				if ( is_array( $val ) && isset( $val['content'] ) ) {
+					$context .= "[$key]: " . $val['content'] . "\n";
+				} else {
+					$context .= "[$key]: " . ( is_string($val) ? $val : json_encode($val) ) . "\n";
+				}
 			}
 
 			$prompt = "You are participating in a multi-agent workflow.

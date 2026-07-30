@@ -1208,12 +1208,13 @@ class AdminRenderer {
 									<h3 class="font-bold text-[#1e293b] group-hover:text-accent"><?php echo esc_html( $wf['name'] ); ?></h3>
 									<div class="flex gap-2">
 										<button class="bg-accent/20 text-accent text-[10px] font-bold px-2 py-1 rounded nexus-run-workflow" data-id="<?php echo (int) $wf['id']; ?>">RUN</button>
+										<button class="bg-blue-500/10 text-blue-500 text-[10px] font-bold px-2 py-1 rounded hover:bg-blue-500 hover:text-white transition-all nexus-edit-workflow" data-id="<?php echo (int) $wf['id']; ?>" data-name="<?php echo esc_attr( $wf['name'] ); ?>" data-definition="<?php echo esc_attr( base64_encode( stripslashes( $wf['definition'] ) ) ); ?>">EDIT</button>
 										<button class="bg-red-500/10 text-red-500 text-[10px] font-bold px-2 py-1 rounded hover:bg-red-500 hover:text-[#1e293b] transition-all nexus-delete-workflow" data-id="<?php echo (int) $wf['id']; ?>">✕</button>
 									</div>
 								</div>
 								<p class="text-xs text-gray-500 mt-2 uppercase tracking-tighter">Chain: <?php
-									$steps = json_decode($wf['definition'], true);
-									echo count($steps);
+									$steps = json_decode( stripslashes( $wf['definition'] ), true );
+									echo is_array( $steps ) ? count( $steps ) : 0;
 								?> Specialized Agents</p>
 							</div>
 						<?php endforeach; ?>
@@ -1835,6 +1836,21 @@ class AdminRenderer {
 						<div class="p-4 rounded-xl bg-orange-500/5 border border-orange-500/10">
 							<p class="font-bold text-[#1e293b] mb-2 text-[10px] uppercase">Elite Workflow Example:</p>
 							<p class="text-xs">"Analyst (Step 1): Research Top 3 competitors. -> Copywriter (Step 2): Write better headlines than Step 1. -> WP Dev (Step 3): Create a landing page draft."</p>
+						</div>
+						<div class="p-4 rounded-xl bg-nexus-blue/5 border border-nexus-blue/10 font-sans">
+							<p class="font-bold text-[#1e293b] mb-2 text-[10px] uppercase">Initial Trigger Prompt Guide:</p>
+							<p class="text-xs mb-2">When you click <span class="text-accent font-bold">RUN</span>, the system displays a popup asking: <span class="italic text-gray-300">"Enter the initial trigger for this workflow execution:"</span></p>
+							<p class="text-[11px] leading-relaxed text-gray-400">This is the seed input or starting prompt passed directly to Step 1. In the popup window, you should enter the primary subject, competitor URL, or baseline topic you want the first agent to analyze.</p>
+							<p class="text-[11px] font-bold mt-2 text-nexus-blue uppercase">Trigger Examples to Enter:</p>
+							<ul class="list-disc list-inside text-[10px] space-y-1 mt-1 text-gray-400">
+								<li><span class="font-bold text-accent">Competitor Analysis:</span> "https://competitor.com/pricing"</li>
+								<li><span class="font-bold text-accent">SaaS Landing Page Idea:</span> "Write a SaaS product focused on automated email marketing"</li>
+								<li><span class="font-bold text-accent">SEO Content Focus:</span> "Target keyword: 'corporate accounting safety tools'"</li>
+								<li><span class="font-bold text-accent">Lead Nurturing Campaign:</span> "Create a 5-day welcome email sequence for high-intent SaaS trial signups"</li>
+								<li><span class="font-bold text-accent">Product Launch Campaign:</span> "Brand positioning and launch plan for our new AI-powered Graphic Designer"</li>
+								<li><span class="font-bold text-accent">Customer Churn Audit:</span> "Analyze quarterly feedback pointing to checkout speed and interface confusion issues"</li>
+								<li><span class="font-bold text-accent">ROAS & Media Buy Audit:</span> "Evaluate underperforming Facebook ad campaigns with high CTR but low checkouts"</li>
+							</ul>
 						</div>
 						<ul class="list-disc list-inside space-y-2 text-xs">
 							<li><span class="text-[#1e293b] font-bold">Chain Persistence:</span> Every agent in the workflow has full access to the previous step's output.</li>

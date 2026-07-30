@@ -203,7 +203,7 @@ function initNexusAdminBridge() {
             };
 
             if (agentId > 0) {
-                nexusFetch(`employees/${agentId}`, 'POST', { ...payload, _method: 'EDITABLE' }).then((res) => {
+                nexusFetch(`employees/${agentId}`, 'POST', { ...payload, _method: 'PUT' }).then((res) => {
                     if (res && (res.error || res.success === false)) {
                         showToast(res.message || 'Failed to update agent profile.', 'error');
                         btn.innerText = 'Update Agent Profile';
@@ -336,6 +336,7 @@ function initNexusAdminBridge() {
     }
 
     // --- 5. Visual Workflow Builder ---
+    let editingWorkflowId = 0;
     const canvas = document.getElementById('nexus-workflow-canvas');
     const draggables = document.querySelectorAll('.nexus-draggable-agent');
 
@@ -386,18 +387,35 @@ function initNexusAdminBridge() {
                 return;
             }
 
-            const payload = { steps: steps, name: 'Custom Workflow ' + Date.now() };
+            let workflowName = 'Custom Workflow ' + Date.now();
+            if (editingWorkflowId > 0) {
+                const existingName = saveWorkflowBtn.dataset.workflowName || 'Custom Workflow';
+                workflowName = prompt('Enter workflow name:', existingName) || existingName;
+            } else {
+                workflowName = prompt('Enter workflow name:', 'Custom Workflow') || workflowName;
+            }
 
-            nexusFetch('workflows', 'POST', payload).then((res) => {
-                if (res && (res.error || res.success === false)) {
-                    showToast(res.message || 'Failed to save workflow.', 'error');
-                } else {
-                    showToast('Multi-agent workflow orchestration saved.');
-                    setTimeout(() => window.location.reload(), 1000);
-                }
-            }).catch(err => {
-                // Fail silently or handle gracefully
-            });
+            const payload = { steps: steps, name: workflowName };
+
+            if (editingWorkflowId > 0) {
+                nexusFetch(`workflows/${editingWorkflowId}`, 'POST', { ...payload, _method: 'PUT' }).then((res) => {
+                    if (res && (res.error || res.success === false)) {
+                        showToast(res.message || 'Failed to update workflow.', 'error');
+                    } else {
+                        showToast('Multi-agent workflow orchestration updated.');
+                        setTimeout(() => window.location.reload(), 1000);
+                    }
+                }).catch(err => {});
+            } else {
+                nexusFetch('workflows', 'POST', payload).then((res) => {
+                    if (res && (res.error || res.success === false)) {
+                        showToast(res.message || 'Failed to save workflow.', 'error');
+                    } else {
+                        showToast('Multi-agent workflow orchestration saved.');
+                        setTimeout(() => window.location.reload(), 1000);
+                    }
+                }).catch(err => {});
+            }
         });
     }
 
@@ -405,11 +423,86 @@ function initNexusAdminBridge() {
     document.addEventListener('click', function(e) {
         // Modal Toggles (Improved with .closest)
         if (e.target.closest('#nexus-open-visual-builder')) {
+            editingWorkflowId = 0;
+            const saveBtn = document.getElementById('nexus-save-workflow-btn');
+            if (saveBtn) {
+                saveBtn.dataset.workflowName = '';
+                saveBtn.innerText = 'Save Workflow';
+                saveBtn.classList.remove('bg-green-500');
+                saveBtn.classList.add('bg-accent');
+            }
+            const canvasEl = document.getElementById('nexus-workflow-canvas');
+            if (canvasEl) {
+                canvasEl.innerHTML = '<div class="text-center"><p class="text-gray-500 font-bold uppercase tracking-widest text-sm">Drop Agents Here to Initialize Sequence</p></div>';
+            }
             const modal = document.getElementById('nexus-visual-builder-modal');
             if (modal) {
                 modal.classList.remove('hidden');
-                modal.querySelector('.glass-panel').classList.add('modal-content-zoom');
+                modal.querySelector('.glass-panel')?.classList.add('modal-content-zoom');
             }
+        }
+
+        const editWfBtn = e.target.closest('.nexus-edit-workflow');
+        if (editWfBtn) {
+            const id = parseInt(editWfBtn.dataset.id) || 0;
+            const name = editWfBtn.dataset.name || '';
+            let steps = [];
+            try {
+                const binString = atob(editWfBtn.dataset.definition);
+                const bytes = new Uint8Array(binString.length);
+                for (let i = 0; i < binString.length; i++) {
+                    bytes[i] = binString.charCodeAt(i);
+                }
+                const decoded = new TextDecoder().decode(bytes);
+                steps = JSON.parse(decoded);
+            } catch (e) {
+                console.error("Failed to parse workflow steps", e);
+                try {
+                    steps = JSON.parse(atob(editWfBtn.dataset.definition));
+                } catch (err) {}
+            }
+
+            editingWorkflowId = id;
+            const saveBtn = document.getElementById('nexus-save-workflow-btn');
+            if (saveBtn) {
+                saveBtn.dataset.workflowName = name;
+                saveBtn.innerText = 'Update Workflow';
+                saveBtn.classList.remove('bg-accent');
+                saveBtn.classList.add('bg-green-500');
+            }
+
+            // Open visual builder modal
+            const modal = document.getElementById('nexus-visual-builder-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.querySelector('.glass-panel')?.classList.add('modal-content-zoom');
+            }
+
+            // Clear canvas and draw existing steps
+            const canvasEl = document.getElementById('nexus-workflow-canvas');
+            if (canvasEl) {
+                canvasEl.innerHTML = '';
+                if (Array.isArray(steps)) {
+                    steps.forEach((stepData, index) => {
+                        const agentEl = document.querySelector(`.nexus-draggable-agent[data-id="${stepData.agent_id}"]`);
+                        const agentName = (agentEl && agentEl.querySelector('p')) ? agentEl.querySelector('p').innerText : 'AI Agent';
+
+                        const step = document.createElement('div');
+                        step.className = 'nexus-workflow-step p-6 rounded-2xl bg-[#f8fafc] border border-nexus-violet animate-fade-in-up mb-4 w-72 shadow-xl relative z-10';
+                        step.dataset.agentId = stepData.agent_id;
+                        step.innerHTML = `
+                            <div class="flex justify-between items-center mb-3">
+                                <p class="text-nexus-violet font-bold text-xs uppercase tracking-widest">Step ${index + 1}</p>
+                                <button class="text-gray-600 hover:text-red-500 transition-colors nexus-step-delete">✕</button>
+                            </div>
+                            <p class="text-[#1e293b] font-bold">${escapeHTML(agentName)}</p>
+                            <textarea placeholder="Define task..." class="nexus-step-task w-full bg-white border border-nexus-border rounded-xl mt-3 p-3 text-xs text-[#1e293b] outline-none focus:border-nexus-violet h-20">${escapeHTML(stepData.task_description)}</textarea>
+                        `;
+                        canvasEl.appendChild(step);
+                    });
+                }
+            }
+            showToast('Workflow loaded for editing.');
         }
         if (e.target.closest('#nexus-close-builder')) {
             document.getElementById('nexus-visual-builder-modal')?.classList.add('hidden');
@@ -461,7 +554,7 @@ function initNexusAdminBridge() {
             const id = renameBtn.dataset.id;
             const newTitle = prompt('Enter new session title:', renameBtn.dataset.title);
             if (newTitle) {
-                nexusFetch(`conversations/${id}`, 'POST', { title: newTitle, _method: 'EDITABLE' }).then(() => {
+                nexusFetch(`conversations/${id}`, 'POST', { title: newTitle, _method: 'PUT' }).then(() => {
                     showToast('Session record updated.');
                     setTimeout(() => window.location.reload(), 1000);
                 });
@@ -620,18 +713,64 @@ function initNexusAdminBridge() {
 
             nexusFetch(`workflows/run/${id}`, 'POST', { input: input }).then(res => {
                 log.innerHTML = '';
+                if (!res || !res.results || !Array.isArray(res.results)) {
+                    const errMsg = (res && res.message) ? res.message : 'Unknown server or timeout error.';
+                    log.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold">Execution Failed: ${escapeHTML(errMsg)}</div>`;
+                    showToast('Workflow execution failed.', 'error');
+                    return;
+                }
                 res.results.forEach((step, idx) => {
-                    const outputContent = typeof step.output === 'object' ? step.output.content : step.output;
-                    const fullText = `[${step.step} - ${step.agent}]\n${outputContent}\n\n`;
+                    const outputContent = ((typeof step.output === 'object' ? step.output.content : step.output) || step.error || '');
+                    const usage = (typeof step.output === 'object' && step.output.usage) ? step.output.usage : null;
+                    const promptTokens = usage ? usage.prompt_tokens : 0;
+                    const compTokens = usage ? usage.completion_tokens : 0;
+                    const cost = ((promptTokens * 0.000005) + (compTokens * 0.000015)).toFixed(5);
+
+                    // Parse Reasoning vs Final Response
+                    let reasoningHtml = '';
+                    let finalResponseHtml = outputContent || '';
+
+                    if (outputContent && typeof outputContent === 'string' && outputContent.includes('Reasoning:') && outputContent.includes('Final Response:')) {
+                        const parts = outputContent.split('Final Response:');
+                        const reasoningPart = parts[0].replace('Reasoning:', '').trim();
+                        const finalPart = parts[1].trim();
+
+                        reasoningHtml = `
+                            <details class="mb-4 bg-black/20 rounded-2xl p-4 border border-white/5 cursor-pointer group">
+                                <summary class="text-xs font-bold text-accent uppercase tracking-widest flex justify-between items-center select-none">
+                                    <span class="flex items-center gap-2">🧠 View Specialist Reasoning (${reasoningPart.split('\n').filter(Boolean).length} Steps)</span>
+                                    <span class="text-[10px] text-gray-500 group-open:hidden">▼ Expand</span>
+                                    <span class="text-[10px] text-gray-500 hidden group-open:inline">▲ Collapse</span>
+                                </summary>
+                                <div class="mt-3 text-xs text-gray-400 leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-accent/30">${escapeHTML(reasoningPart)}</div>
+                            </details>
+                        `;
+                        finalResponseHtml = finalPart;
+                    }
+
                     log.innerHTML += `
-                        <div class="flex gap-6 items-start animate-fade-in-up">
-                            <div class="w-12 h-12 rounded-full bg-nexus-elevated border border-accent flex items-center justify-center font-bold text-accent shrink-0">${idx + 1}</div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-center mb-2">
-                                    <p class="font-bold text-[#1e293b] uppercase tracking-widest text-[10px] opacity-50">${escapeHTML(step.step)} • ${escapeHTML(step.agent)}</p>
-                                    <button class="text-[10px] text-accent hover:text-[#1e293b]" onclick="navigator.clipboard.writeText(\`${outputContent.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`); showToast('Output copied to clipboard.')">Copy</button>
+                        <div class="flex gap-6 items-start animate-fade-in-up mb-8 last:mb-0">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-accent to-nexus-violet border border-accent/30 flex items-center justify-center font-bold text-[#1e293b] shadow-lg shrink-0">${idx + 1}</div>
+                            <div class="flex-1 bg-nexus-elevated border border-nexus-border rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-bl-full pointer-events-none"></div>
+                                <div class="flex justify-between items-center mb-6">
+                                    <div>
+                                        <p class="font-bold text-[#1e293b] text-gradient-vibrant text-lg uppercase tracking-tight">${escapeHTML(step.agent)}</p>
+                                        <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1">${escapeHTML(step.step)} • Active Specialist Persona</p>
+                                    </div>
+                                    <div class="flex gap-3 items-center">
+                                        ${usage ? `
+                                            <span class="bg-[#f8fafc]/5 border border-white/5 text-[9px] px-3 py-1 rounded-full text-gray-400 font-mono">
+                                                Tokens: ${promptTokens + compTokens} | Cost: $${cost}
+                                            </span>
+                                        ` : ''}
+                                        <button class="bg-accent/10 hover:bg-accent text-accent hover:text-[#1e293b] border border-accent/20 text-[10px] font-bold px-4 py-2 rounded-xl transition-all" onclick="navigator.clipboard.writeText(\`${finalResponseHtml.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`); showToast('Pruned specialist response copied.')">Copy Output</button>
+                                    </div>
                                 </div>
-                                <div class="p-6 rounded-3xl bg-nexus-elevated border border-nexus-border text-gray-300 text-sm leading-relaxed shadow-xl whitespace-pre-wrap">${escapeHTML(outputContent)}</div>
+
+                                ${reasoningHtml}
+
+                                <div class="p-6 rounded-2xl bg-[#f8fafc]/5 border border-white/5 text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">${escapeHTML(finalResponseHtml)}</div>
                             </div>
                         </div>`;
                 });
@@ -991,9 +1130,10 @@ function initNexusAdminBridge() {
         transcript.innerHTML += thinkingHtml;
         transcript.scrollTop = transcript.scrollHeight;
 
+        const agendaVal = document.getElementById('nexus-meeting-agenda') ? document.getElementById('nexus-meeting-agenda').value : '';
         const meetingPayload = {
             agent_id: responder.id,
-            agenda: "CHAIRMAN INTERVENTION: " + interventionText,
+            agenda: agendaVal + " CHAIRMAN INTERVENTION: " + interventionText,
             round: index + 1
         };
 

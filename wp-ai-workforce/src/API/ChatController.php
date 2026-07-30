@@ -60,6 +60,17 @@ class ChatController {
 		// Specialized Meeting Prompt
 		$prompt = "We are in a strategic meeting. ROUND: $round. AGENDA: $agenda.
 		As the {$agent['position']}, give your expert opinion or contribution to the goal.
+		Make sure your answer is the absolute best based on your unique role capability, highly relevant to what the chairman is asking or commanding, and demonstrates practical common sense.
+		Provide concrete, real-world examples when needed to back up your points.
+
+		CONVERSATIONAL & PROBLEM-SOLVING PROTOCOL:
+		1. Write in a natural, highly conversational, and engaging board-meeting style.
+		2. Deeply analyze the command or directive of the chairman.
+		3. Check the relevancy of the strategic agenda context to the chairman's latest command. Prioritize the chairman's command if there is a shift in focus.
+		4. PROACTIVE AUDIT: Think ahead to anticipate any potential obstacles, risks, bottlenecks, or security/financial problems related to this topic.
+		5. If there is a potential problem, explicitly output a clear 'WARNING: [potential problem]' and immediately provide 'BEST SOLUTION: [the best solution]'.
+		6. Avoid repeating or giving similar answers to what other participants have already stated; offer a unique perspective or a distinct, constructive critique.
+
 		If you have a clear recommendation, format it as 'DECISION: [your decision]' or 'ACTION: [specific action]'.
 		Keep it professional, concise, and focused on your specific role KPIs.";
 

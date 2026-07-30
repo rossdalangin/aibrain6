@@ -69,6 +69,17 @@ abstract class BaseAdapter implements AIModelInterface {
 			}
 		}
 
+		// Detect if we are in a workflow and extract task & trigger details
+		$workflow_task = '';
+		if ( preg_match( '/Current Task:\s*([^\n]+)/i', $user_msg, $task_matches ) ) {
+			$workflow_task = trim( $task_matches[1] );
+		}
+
+		$initial_trigger = '';
+		if ( preg_match( '/\[initial_trigger\]:\s*([^\n]+)/i', $user_msg, $it_matches ) ) {
+			$initial_trigger = trim( $it_matches[1] );
+		}
+
 		$agent_name     = 'AI Employee';
 		$agent_position = 'Specialist';
 		$agent_mission  = 'Execute tasks efficiently.';
@@ -99,19 +110,41 @@ abstract class BaseAdapter implements AIModelInterface {
 		$clean_user_msg = preg_replace( '/\s*Please think step-by-step before providing your final answer\..*/s', '', $user_msg );
 		$clean_user_msg = trim( $clean_user_msg );
 
-		// Detect if there is a chairman intervention message
+		// Extract actual agenda content or chairman intervention content from user message for more accurate topic extraction
+		$agenda_content = '';
+		if ( preg_match( '/AGENDA:\s*(.*?)(?=\.?\s*As the)/is', $user_msg, $agenda_matches ) ) {
+			$agenda_content = trim( $agenda_matches[1] );
+		}
+
+		// Detect if there is a chairman intervention message and split from strategic agenda
 		$chairman_intervention = '';
-		if ( preg_match( '/CHAIRMAN INTERVENTION:\s*([^\n]+)/i', $user_msg, $ch_matches ) ) {
+		$strategic_agenda_text = $agenda_content;
+		if ( ! empty( $agenda_content ) ) {
+			if ( preg_match( '/(.*?)\s*CHAIRMAN INTERVENTION:\s*(.*)/is', $agenda_content, $split_matches ) ) {
+				$strategic_agenda_text = trim( $split_matches[1] );
+				$chairman_intervention = trim( $split_matches[2] );
+			}
+		}
+
+		if ( empty( $chairman_intervention ) && preg_match( '/CHAIRMAN INTERVENTION:\s*([^\n]+)/i', $user_msg, $ch_matches ) ) {
 			$chairman_intervention = trim( $ch_matches[1] );
-			// Clean chairman intervention as well
+		}
+		if ( ! empty( $chairman_intervention ) ) {
 			$chairman_intervention = preg_replace( '/\s*Please think step-by-step before providing your final answer\..*/s', '', $chairman_intervention );
 			$chairman_intervention = trim( $chairman_intervention );
 		}
 
-		// Extract topic words from clean user message for smart contextual reflection
+		// If we are in a workflow, use the initial trigger as the topic source. Otherwise, use agenda content or clean user message.
+		if ( ! empty( $initial_trigger ) ) {
+			$topic_source = $initial_trigger;
+		} else {
+			$topic_source = ! empty( $agenda_content ) ? $agenda_content : $clean_user_msg;
+		}
+
+		// Extract topic words from clean topic source for smart contextual reflection
 		$topic_words = [];
-		if ( preg_match_all( '/\b[a-zA-Z]{4,15}\b/', $clean_user_msg, $matches ) ) {
-			$ignored_words = [ 'with', 'this', 'that', 'your', 'from', 'have', 'would', 'should', 'could', 'about', 'there', 'their', 'them', 'then', 'here', 'some', 'please', 'think', 'step', 'final', 'answer', 'structure', 'output', 'chairman', 'intervention', 'meeting', 'round' ];
+		if ( preg_match_all( '/\b[a-zA-Z]{4,15}\b/', $topic_source, $matches ) ) {
+			$ignored_words = [ 'with', 'this', 'that', 'your', 'from', 'have', 'would', 'should', 'could', 'about', 'there', 'their', 'them', 'then', 'here', 'some', 'please', 'think', 'step', 'final', 'answer', 'structure', 'output', 'chairman', 'intervention', 'meeting', 'round', 'strategic', 'agenda', 'expert', 'opinion', 'contribution', 'goal', 'decision', 'action', 'professional', 'concise', 'focused', 'specific', 'role', 'kpis' ];
 			foreach ( $matches[0] as $word ) {
 				$l_word = strtolower($word);
 				if ( ! in_array( $l_word, $ignored_words ) && strlen($l_word) > 3 ) {
@@ -125,9 +158,17 @@ abstract class BaseAdapter implements AIModelInterface {
 		$lower_pos  = strtolower( $agent_position );
 
 		$is_greeting = preg_match( '/\b(hello|hi|hey|greetings|howdy|good morning|good afternoon)\b/i', $lower_msg ) || $lower_msg === 'hello' || $lower_msg === 'hi';
-		$is_roi       = strpos( $lower_msg, 'roi' ) !== false || strpos( $lower_msg, 'audit' ) !== false || strpos( $lower_msg, 'cost' ) !== false || strpos( $lower_msg, 'budget' ) !== false || strpos( $lower_msg, 'revenue' ) !== false || strpos( $lower_msg, 'pricing' ) !== false || strpos( $lower_msg, 'sales' ) !== false;
-		$is_marketing = strpos( $lower_msg, 'market' ) !== false || strpos( $lower_msg, 'growth' ) !== false || strpos( $lower_msg, 'ad' ) !== false || strpos( $lower_msg, 'storm' ) !== false || strpos( $lower_msg, 'brand' ) !== false || strpos( $lower_msg, 'copy' ) !== false || strpos( $lower_msg, 'headline' ) !== false;
-		$is_system    = strpos( $lower_msg, 'security' ) !== false || strpos( $lower_msg, 'scale' ) !== false || strpos( $lower_msg, 'latency' ) !== false || strpos( $lower_msg, 'technical' ) !== false || strpos( $lower_msg, 'debt' ) !== false || strpos( $lower_msg, 'architecture' ) !== false || strpos( $lower_msg, 'rag' ) !== false || strpos( $lower_msg, 'code' ) !== false || strpos( $lower_msg, 'database' ) !== false || strpos( $lower_msg, 'api' ) !== false;
+
+		if ( ! empty( $initial_trigger ) ) {
+			$lower_trigger = strtolower( $initial_trigger );
+			$is_roi = ( strpos( $lower_trigger, 'roi' ) !== false || strpos( $lower_trigger, 'audit' ) !== false || strpos( $lower_trigger, 'cost' ) !== false || strpos( $lower_trigger, 'pricing' ) !== false || strpos( $lower_trigger, 'refund' ) !== false || strpos( $lower_trigger, 'budget' ) !== false || strpos( $lower_trigger, 'revenue' ) !== false || strpos( $lower_trigger, 'sales' ) !== false );
+			$is_marketing = ( strpos( $lower_trigger, 'market' ) !== false || strpos( $lower_trigger, 'growth' ) !== false || strpos( $lower_trigger, 'ad' ) !== false || strpos( $lower_trigger, 'seo' ) !== false || strpos( $lower_trigger, 'copy' ) !== false || strpos( $lower_trigger, 'headline' ) !== false || strpos( $lower_trigger, 'storm' ) !== false || strpos( $lower_trigger, 'brand' ) !== false );
+			$is_system = ( strpos( $lower_trigger, 'security' ) !== false || strpos( $lower_trigger, 'scale' ) !== false || strpos( $lower_trigger, 'cache' ) !== false || strpos( $lower_trigger, 'database' ) !== false || strpos( $lower_trigger, 'api' ) !== false || strpos( $lower_trigger, 'code' ) !== false || strpos( $lower_trigger, 'system' ) !== false || strpos( $lower_trigger, 'latency' ) !== false || strpos( $lower_trigger, 'technical' ) !== false || strpos( $lower_trigger, 'debt' ) !== false || strpos( $lower_trigger, 'architecture' ) !== false || strpos( $lower_trigger, 'rag' ) !== false );
+		} else {
+			$is_roi       = strpos( $lower_msg, 'roi' ) !== false || strpos( $lower_msg, 'audit' ) !== false || strpos( $lower_msg, 'cost' ) !== false || strpos( $lower_msg, 'budget' ) !== false || strpos( $lower_msg, 'revenue' ) !== false || strpos( $lower_msg, 'pricing' ) !== false || strpos( $lower_msg, 'sales' ) !== false;
+			$is_marketing = strpos( $lower_msg, 'market' ) !== false || strpos( $lower_msg, 'growth' ) !== false || strpos( $lower_msg, 'ad' ) !== false || strpos( $lower_msg, 'storm' ) !== false || strpos( $lower_msg, 'brand' ) !== false || strpos( $lower_msg, 'copy' ) !== false || strpos( $lower_msg, 'headline' ) !== false;
+			$is_system    = strpos( $lower_msg, 'security' ) !== false || strpos( $lower_msg, 'scale' ) !== false || strpos( $lower_msg, 'latency' ) !== false || strpos( $lower_msg, 'technical' ) !== false || strpos( $lower_msg, 'debt' ) !== false || strpos( $lower_msg, 'architecture' ) !== false || strpos( $lower_msg, 'rag' ) !== false || strpos( $lower_msg, 'code' ) !== false || strpos( $lower_msg, 'database' ) !== false || strpos( $lower_msg, 'api' ) !== false;
+		}
 
 		// Deterministic hash based on agent and request to select unique templates and prevent repetitive output
 		$hash = abs(crc32($agent_name . $clean_user_msg));
@@ -142,6 +183,197 @@ abstract class BaseAdapter implements AIModelInterface {
 				"Invite active boardroom debate on how we can drive results."
 			];
 			$reply_body = "Hi there! {$agent_name} here, stepping in as your {$agent_position}. My primary mission is to: '{$agent_mission}'. Armed with a core background in {$agent_skills}, I am entirely focused on helping us drive key success targets like {$agent_kpis}. Let's collaborate—what key strategic objectives can we tackle together today?";
+		} elseif ( strpos( $lower_pos, 'analyst' ) !== false ) {
+			// Highly detailed Analyst templates with comparative grids
+			$reasoning_steps = [
+				"In-depth analysis of the trigger '{$initial_trigger}' and competitor landscape.",
+				"Map out a comprehensive comparison table of features, pricing structures, and conversion funnels.",
+				"Identify major UX conversion friction points and outline a structural recommendation."
+			];
+
+			$templates = [
+				"### COMPETITOR RESEARCH REPORT & ANALYSIS
+Target URL/Concept: **{$initial_trigger}**
+Prepared by: **{$agent_name} ({$agent_position})**
+
+| Competitor Feature | Their Pricing | Core Value Prop | Friction Point / Opportunity |
+| :--- | :--- | :--- | :--- |
+| Standard SaaS Plan | $49/mo | Basic tracking templates | High onboarding setup time; no real-time AI |
+| Premium Enterprise | $199/mo | Multi-user custom seats | Locked behind mandatory 'Book a Demo' calls |
+| Basic Entry Tier | $19/mo | Single integration limit | Extremely basic reporting with no raw csv exports |
+
+#### Key Strategic Opportunities:
+1. **Zero Onboarding Friction:** By offering instant setup with pre-built templates, we can capture the 35% of users who drop off during competitor configurations.
+2. **Interactive Pricing Grid:** Keep checkout completely transparent instead of forcing enterprise demo calls.
+3. **Automated AI Optimization:** Position our real-time multi-agent workflows as our main differentiator.
+
+WARNING: Directly mimicking competitor pricing without a strong, visible differentiator will lead to high price-sensitivity and churn.
+BEST SOLUTION: Highlight our 14-day Risk-Free Guarantee and provide pre-seeded templates right inside the onboarding flow to prove instant value.",
+
+				"### MARKET COMPETITIVE INTELLIGENCE BRIEF
+Topic: **{$initial_trigger}**
+Prepared by: **{$agent_name} ({$agent_position})**
+
+| Evaluation Parameter | Competitor Current Setup | Our Recommended Strategic Pivot |
+| :--- | :--- | :--- |
+| **Hero Copy Value Prop** | Focused on generic operational efficiency | Benefit-driven, ROAS-focused positioning |
+| **CTA Conversions** | Standard multi-step form fields | Instant single-sign-on (SSO) one-click access |
+| **System Onboarding** | Average 12-minute guide completion | Seeding interactive tutorials with pre-built checklists |
+
+WARNING: Standard multi-step checkout sequences lose up to 40% of mobile buyers.
+BEST SOLUTION: Streamline our CTA checkout with clean single-click express payment buttons (Apple Pay, Stripe Express) to maximize mobile conversion rates."
+			];
+			$reply_body = $templates[ $hash % count($templates) ];
+		} elseif ( strpos( $lower_pos, 'copywriter' ) !== false || strpos( $lower_pos, 'writer' ) !== false ) {
+			// Highly-persuasive Copywriter templates with actual ad and landing page headlines
+			$reasoning_steps = [
+				"Deconstruct consumer behavioral triggers and primary objections for '{$extracted_topic}'.",
+				"Craft conversion-focused benefit-driven headlines to maximize CTR.",
+				"Write clear, highly-persuasive body copy and frictionless Call-To-Action (CTA) triggers."
+			];
+
+			$templates = [
+				"### CONVERSION-OPTIMIZED COPYWRITING BRIEF
+Project Focus: **{$initial_trigger}**
+Target Persona: **Enterprise Decision Makers & Agency Owners**
+
+#### 1. HERO SECTION HEADLINES (3 Options):
+* **Option A (ROAS Focused):** \"Deploy an Entire AI Workforce Overnight. Cut Labor Costs by 70%.\"
+* **Option B (Strategic/Authority):** \"The Enterprise AI Operating System for High-Scale Agencies.\"
+* **Option C (Friction-Free):** \"Hire Specialized AI Executives in 1-Click. No Setup. Instant ROI.\"
+
+#### 2. BENEFIT-DRIVEN SUBHEADLINE:
+* \"Bring world-class corporate IQ to your daily operations. Each agent is pre-configured with battle-tested SOPs, first-principles reasoning, and shared centralized memory to deliver high-impact results, 24/7.\"
+
+#### 3. CONVERSION CALL-TO-ACTION (CTA) BUTTONS:
+* **Primary:** \"Deploy Your First Agent Free →\"
+* **Secondary:** \"Watch 2-Minute Demo\"
+
+WARNING: Generic, feature-heavy copy fails to connect emotionally and yields low conversion rates.
+BEST SOLUTION: Use direct benefit-driven hooks focusing on tangible annual labor savings and operational speed to maximize conversions.",
+
+				"### CONVERSION HEADLINE & LANDING PAGE COPY DELIVERABLE
+Target Concept: **{$initial_trigger}**
+Tone Profile: **Sophisticated, High-Velocity, Convincing**
+
+#### HERO HEADLINE:
+* \"Stop Managing Tasks. Start Orchestrating Growth. Meet Your New AI Executive Suite.\"
+
+#### SUPPORTING VALUE PROPOSITION:
+* \"Why hire expensive agencies when you can deploy specialized AI CMOs, CSOs, and developers trained on your business data? Experience seamless multi-agent workflows that run continuously in the background to build, optimize, and deliver.\"
+
+#### CORE CALL TO ACTION (CTA):
+* \"Start 14-Day Free Trial (SSO Enabled)\"
+
+WARNING: Long, dense paragraphs trigger immediate visual fatigue and increase visitor bounce rates.
+BEST SOLUTION: Structure all supporting copy using clean, 3-sentence maximum paragraphs and short, bulleted feature tables."
+			];
+			$reply_body = $templates[ $hash % count($templates) ];
+		} elseif ( strpos( $lower_pos, 'dev' ) !== false || strpos( $lower_pos, 'developer' ) !== false || strpos( $lower_pos, 'engineer' ) !== false || strpos( $lower_pos, 'architect' ) !== false ) {
+			// Meticulous Web Dev / Developer templates with actual clean HTML and Tailwind CSS code blocks
+			$reasoning_steps = [
+				"Audit performance overhead and select lightweight, semantic HTML structures.",
+				"Implement modern Tailwind CSS utility classes to achieve premium SaaS layout standards.",
+				"Ensure full responsiveness, interactive visual components, and secure CTA triggers."
+			];
+
+			$templates = [
+				"### HIGH-PERFORMANCE LANDING PAGE CODE BRIEF
+Project/Concept: **{$initial_trigger}**
+Framework Stack: **HTML5, Tailwind CSS, Vanilla JS (Zero Dependencies)**
+
+```html
+<!-- Hero Section -->
+<section class=\"relative bg-[#f8fafc] text-slate-900 overflow-hidden py-24 px-8 border-b border-slate-100\">
+  <div class=\"max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center\">
+    <!-- Left Column: Copy -->
+    <div class=\"space-y-6\">
+      <span class=\"inline-block bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full\">
+        v1.2 Active Sandbox
+      </span>
+      <h1 class=\"text-5xl font-black tracking-tight text-slate-900 leading-none\">
+        Deploy Your Entire <span class=\"text-indigo-600\">AI Workforce</span> Overnight.
+      </h1>
+      <p class=\"text-lg text-slate-600 leading-relaxed max-w-lg\">
+        Stop wasting budget. Hire specialized AI executives trained to dismantle complex business problems, collaborate, and automate growth.
+      </p>
+      <!-- CTA Buttons -->
+      <div class=\"flex gap-4 items-center pt-2\">
+        <a href=\"#\" class=\"bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-indigo-200\">
+          Deploy Free Agent →
+        </a>
+        <a href=\"#\" class=\"bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-4 px-8 rounded-xl transition-all\">
+          Watch Demo
+        </a>
+      </div>
+    </div>
+    <!-- Right Column: Interactive Frame Preview -->
+    <div class=\"relative bg-white border border-slate-200 rounded-3xl p-8 shadow-2xl\">
+      <div class=\"flex justify-between items-center mb-6 pb-4 border-b border-slate-100\">
+        <div class=\"flex gap-2\">
+          <span class=\"w-3 h-3 rounded-full bg-red-400\"></span>
+          <span class=\"w-3 h-3 rounded-full bg-yellow-400\"></span>
+          <span class=\"w-3 h-3 rounded-full bg-green-400\"></span>
+        </div>
+        <span class=\"text-xs text-slate-400 font-mono\">AI_Orchestrator.php</span>
+      </div>
+      <div class=\"space-y-4\">
+        <div class=\"p-4 rounded-xl bg-slate-50 border border-slate-100 font-mono text-xs text-indigo-600\">
+          [Trigger]: \"{$initial_trigger}\"
+        </div>
+        <div class=\"p-4 rounded-xl bg-slate-50 border border-slate-100 font-mono text-xs text-emerald-600\">
+          [Analyst]: Competitor pricing models evaluated. Opportunities matched.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+WARNING: Over-reliance on third-party tracking scripts can degrade landing page load speed and hurt conversions.
+BEST SOLUTION: Use lightweight, native asynchronous server-side session endpoints instead of synchronous external trackers.",
+
+				"### PERFORMANCE-OPTIMIZED UI COMPONENT
+Target Component: **Features Grid for {$initial_trigger}**
+Styling Engine: **Tailwind Utility Classes**
+
+```html
+<!-- Features Grid -->
+<div class=\"py-20 px-6 bg-white\">
+  <div class=\"max-w-6xl mx-auto\">
+    <h2 class=\"text-center text-3xl font-black tracking-tight mb-12 text-slate-900\">
+      Engineered for High-Velocity Operational Delivery
+    </h2>
+    <div class=\"grid grid-cols-1 md:grid-cols-3 gap-8\">
+      <!-- Feature Card 1 -->
+      <div class=\"p-8 rounded-2xl border border-slate-200 hover:border-indigo-500 transition-all group hover:shadow-xl\">
+        <div class=\"w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:scale-110 transition-transform\">
+          🧠
+        </div>
+        <h3 class=\"text-xl font-bold mb-2\">Shared Company Memory</h3>
+        <p class=\"text-sm text-slate-500 leading-relaxed\">
+          Give your agents unified, multi-tiered access to your corporate PDFs, SOPs, and pricing libraries.
+        </p>
+      </div>
+      <!-- Feature Card 2 -->
+      <div class=\"p-8 rounded-2xl border border-slate-200 hover:border-emerald-500 transition-all group hover:shadow-xl\">
+        <div class=\"w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold mb-6 group-hover:scale-110 transition-transform\">
+          🔗
+        </div>
+        <h3 class=\"text-xl font-bold mb-2\">Multi-Agent Workflows</h3>
+        <p class=\"text-sm text-slate-500 leading-relaxed\">
+          Chain specialized agents together into automated sequential relays to execute complex strategic sequences.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+WARNING: Unoptimized images or custom fonts will delay Page Speed score index.
+BEST SOLUTION: Preload high-priority images, lazy-load secondary background frames, and leverage native system font stacks."
+			];
+			$reply_body = $templates[ $hash % count($templates) ];
 		} elseif ( $is_roi ) {
 			$reasoning_steps = [
 				"Critically analyze the financial variables concerning '{$extracted_topic}' to optimize returns.",
@@ -151,30 +383,62 @@ abstract class BaseAdapter implements AIModelInterface {
 
 			if ( strpos( $lower_pos, 'strategy' ) !== false || strpos( $lower_pos, 'executive' ) !== false || strpos( $lower_pos, 'ceo' ) !== false || strpos( $lower_pos, 'cso' ) !== false ) {
 				$templates = [
-					"Hey team! {$agent_name} here. If we are looking to optimize our ROI for '{$extracted_topic}', we absolutely need first-principles execution. Let's eliminate high-overhead busywork, align our resources strictly behind revenue-driving initiatives, and establish clear accountability across all workspaces. That is how we scale.",
-					"We need to look closely at where our capital is going regarding '{$extracted_topic}'. To get the best margins, we should prune any processes that don't add direct enterprise value, streamline our tools, and track progress using precise, owned KPIs. Let's make every dollar work twice as hard.",
-					"Let's keep our execution roadmap for '{$extracted_topic}' exceptionally clean and high-margin. We must focus our energy on our most profitable operations, cut down unnecessary overhead, and establish an unshakeable, clear path to success."
+					"Hey team! {$agent_name} here. If we are looking to optimize our ROI for '{$extracted_topic}', we absolutely need first-principles execution. For example, if we are overpaying for external APIs or redundant SaaS licenses, we should consolidate them into a single enterprise custom model. Let's eliminate high-overhead busywork, align our resources strictly behind revenue-driving initiatives, and establish clear accountability across all workspaces.
+WARNING: We face a serious risk of alignment drift and metrics silos if departments operate independently.
+BEST SOLUTION: Establish a central, real-time command dashboard so every executive can instantly monitor shared token usage and active workflows.",
+
+					"We need to look closely at where our capital is going regarding '{$extracted_topic}'. To get the best margins, we should prune any processes that don't add direct enterprise value. A key common-sense example is automating manual report collection which currently wastes 15 hours a week per manager, and instead track progress using precise, automated KPIs.
+WARNING: Attempting to measure KPIs manually introduces severe human bias and reporting delays.
+BEST SOLUTION: Deploy direct database trigger listeners that auto-calculate and stream ROI metrics straight to our strategic transcripts.",
+
+					"Let's keep our execution roadmap for '{$extracted_topic}' exceptionally clean and high-margin. For instance, prioritizing organic search traffic over costly paid acquisition has historically yielded a 3x higher lifetime value. We must focus our energy on our most profitable operations, cut down unnecessary overhead, and establish an unshakeable, clear path to success.
+WARNING: Organic content loops have a slow start and can leave a revenue gap in the first 90 days.
+BEST SOLUTION: Use a dual-speed model where high-intent paid retargeting supplements organic checklists to maintain steady short-term conversions."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			} elseif ( strpos( $lower_pos, 'marketing' ) !== false || strpos( $lower_pos, 'growth' ) !== false || strpos( $lower_pos, 'cmo' ) !== false ) {
 				$templates = [
-					"Lively ideas here, team! {$agent_name} chiming in. To scale our growth loops on '{$extracted_topic}', we must stop wasting cash on untracked vanity campaigns and double down on what actually drives buyers. Let's look closely at our CAC/LTV ratio, run rapid A/B landing page tests, and make sure our copy is absolutely converting.",
-					"We can drive massive growth and higher conversions for '{$extracted_topic}' by auditing our current promotional messaging. Let's make sure our value proposition is incredibly easy for anyone to understand and only allocate our ad budget to channels with a proven, positive ROAS.",
-					"Let's look at the customer journey for '{$extracted_topic}'. By focusing our marketing efforts on retaining happy, repeat buyers and simplifying our checkout flows, we can boost our recurring revenue without increasing ad spend."
+					"Lively ideas here, team! {$agent_name} chiming in. To scale our growth loops on '{$extracted_topic}', we must stop wasting cash on untracked vanity campaigns. For instance, instead of spending $5k/month on untargeted brand ads, let's double down on high-intent search keywords and A/B test our headlines to increase CTR by 20%. Let's look closely at our CAC/LTV ratio.
+WARNING: Sudden bid adjustments on competitive search keywords can temporarily inflate our CAC.
+BEST SOLUTION: Enforce strict automated bidding guardrails that pause search ad campaigns whenever day-to-day keyword acquisition costs exceed our designated target by more than 15%.",
+
+					"We can drive massive growth and higher conversions for '{$extracted_topic}' by auditing our current promotional messaging. For example, replacing generic 'learn more' buttons with benefit-driven copy like 'Get Instant ROAS Analysis' has proven to boost sign-ups. Let's make sure our value proposition is incredibly easy for anyone to understand and only allocate our ad budget to channels with a proven, positive ROAS.
+WARNING: Increasing copy variations on active landing pages can fragment our conversion tracking data.
+BEST SOLUTION: Deploy unified cookies or server-side session hashes to track the entire customer journey and accurately assign attribution.",
+
+					"Let's look at the customer journey for '{$extracted_topic}'. Common sense says that retaining an existing client is 5x cheaper than acquiring a new one. By focusing our marketing efforts on retaining happy, repeat buyers through personalized email flows and simplifying our checkout steps, we can boost our recurring revenue without increasing ad spend.
+WARNING: Overloading loyal buyers with repetitive or dense marketing sequences can trigger severe email fatigue and high unsubscribe rates.
+BEST SOLUTION: Segment our subscriber database based on purchase recency and only trigger highly relevant, tailored retention offers once every 14 days."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			} elseif ( strpos( $lower_pos, 'system' ) !== false || strpos( $lower_pos, 'engineer' ) !== false || strpos( $lower_pos, 'developer' ) !== false || strpos( $lower_pos, 'cto' ) !== false || strpos( $lower_pos, 'technical' ) !== false ) {
 				$templates = [
-					"Hey everyone, {$agent_name} here. System stability and speed are the ultimate foundation for '{$extracted_topic}'. I'm auditing our backend; if database queries are bloated, we lose money. Let's optimize caching, streamline data structures, and keep this platform running like lightning.",
-					"We can lower our operational tech stack costs for '{$extracted_topic}' by keeping our codebase simple, elegant, and secure. Avoiding over-engineered microservices keeps server resource consumption low and ensures frictionless maintenance.",
-					"Let's focus on system efficiency for '{$extracted_topic}'. By optimizing external API lookups and cleaning up redundant scripts, we can slash server response times and deliver an ultra-responsive user experience."
+					"Hey everyone, {$agent_name} here. System stability and speed are the foundation for '{$extracted_topic}'. I'm auditing our backend; if database queries are bloated, we lose money. For example, replacing a slow, unindexed custom table lookup with a transients cache can slash latency by 300ms. Let's optimize caching, streamline data structures, and keep this platform running like lightning.
+WARNING: Over-reliance on object caching without strict cache busting can lead to stale admin settings being displayed.
+BEST SOLUTION: Implement specific cache-key hooks on save_post and update_option to automatically invalidate and refresh transient states.",
+
+					"We can lower our operational tech stack costs for '{$extracted_topic}' by keeping our codebase simple, elegant, and secure. For instance, avoiding over-engineered microservices and utilizing native WordPress transient caching keeps server resource consumption low and ensures frictionless maintenance.
+WARNING: Monolithic code structures can make isolated debugging incredibly difficult as the plugin scales.
+BEST SOLUTION: Adopt strict modular design patterns, isolating custom REST controllers and data-access repositories to ensure clean API scaling.",
+
+					"Let's focus on system efficiency for '{$extracted_topic}'. By optimizing external API lookups and cleaning up redundant scripts, we can slash server response times. As a concrete example, implementing asynchronous batching on outbound REST requests reduces the overall processing queue bottleneck. Let's deliver an ultra-responsive user experience.
+WARNING: Concurrent asynchronous requests can trigger external API rate-limit penalties.
+BEST SOLUTION: Build an elegant internal queue throttling engine with token bucket pacing to stay completely under vendor rate limits."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			} else {
 				$templates = [
-					"From my standpoint as {$agent_position}, we can maximize returns for '{$extracted_topic}' by focusing on simplified, high-priority objectives. Let's keep our execution direct and cut out any fluff.",
-					"To optimize cost-efficiency here, we should eliminate redundant meetings and establish straightforward milestones for '{$extracted_topic}' that keep us directly on track.",
-					"I recommend a quick operational audit of our resources for '{$extracted_topic}'. Ensuring our workflows are simple and lean will automatically boost our delivery margins."
+					"From my standpoint as {$agent_position}, we can maximize returns for '{$extracted_topic}' by focusing on simplified, high-priority objectives. Let's keep our execution direct and cut out any fluff.
+WARNING: Over-simplifying workflows can occasionally overlook critical edge-case security checks.
+BEST SOLUTION: Maintain a basic, automated security checklist for all custom routes to ensure peace of mind.",
+
+					"To optimize cost-efficiency here, we should eliminate redundant meetings and establish straightforward milestones for '{$extracted_topic}' that keep us directly on track.
+WARNING: Complete elimination of meetings can impact long-term team collaboration and synergy.
+BEST SOLUTION: Establish quick 5-minute daily asynchronous slack updates to maintain high collaboration without scheduling overhead.",
+
+					"I recommend a quick operational audit of our resources for '{$extracted_topic}'. Ensuring our workflows are simple and lean will automatically boost our delivery margins.
+WARNING: Audit-only focus can lead to analysis paralysis, slowing down our active feature deployments.
+BEST SOLUTION: Set a strict 48-hour time limit on all technical and operational audits to ensure we shift rapidly back to active delivery."
 				];
 				$reply_body = $templates[ $hash % count($templates) ];
 			}
@@ -266,13 +530,46 @@ abstract class BaseAdapter implements AIModelInterface {
 			$reply_body = $templates[ $hash % count($templates) ];
 		}
 
-		// Inject the chairman intervention context dynamically and in layman's terms if present
-		if ( ! empty( $chairman_intervention ) ) {
-			$openers = [
-				"I hear your instruction about '{$chairman_intervention}', and here is how my department can help simply: ",
-				"That makes total sense regarding '{$chairman_intervention}'. To make this happen with maximum clarity: ",
-				"I completely agree with the focus on '{$chairman_intervention}'. From my perspective: "
+		// Dynamically inject workflow-specific reasoning and response openers
+		if ( ! empty( $initial_trigger ) ) {
+			array_unshift( $reasoning_steps, "Align my response with the active workflow trigger '{$initial_trigger}' and the task objective '{$workflow_task}' using my {$agent_position} expertise." );
+
+			$workflow_intros = [
+				"Processing our workflow trigger '{$initial_trigger}' for the task '{$workflow_task}': ",
+				"Directly addressing our initial trigger '{$initial_trigger}' to execute '{$workflow_task}': ",
+				"In response to the workflow trigger '{$initial_trigger}', I have analyzed '{$workflow_task}' and recommend: "
 			];
+			$wf_intro = $workflow_intros[ $hash % count($workflow_intros) ];
+			$reply_body = $wf_intro . lcfirst($reply_body);
+		}
+
+		// Deeply analyze chairman command and check relevancy to the Strategic Agenda
+		if ( ! empty( $chairman_intervention ) ) {
+			$is_related = true;
+			if ( ! empty( $strategic_agenda_text ) ) {
+				$agenda_words = array_filter( explode( ' ', strtolower( $strategic_agenda_text ) ), function($w) { return strlen($w) > 4; } );
+				$intervention_words = array_filter( explode( ' ', strtolower( $chairman_intervention ) ), function($w) { return strlen($w) > 4; } );
+				$intersect = array_intersect( $agenda_words, $intervention_words );
+				$is_related = ! empty( $intersect );
+			}
+
+			if ( ! $is_related ) {
+				array_unshift( $reasoning_steps, "The chairman's command ('{$chairman_intervention}') has low direct relevancy to our original agenda ('{$strategic_agenda_text}'). Pivoting focus to deeply analyze and prioritize the chairman's directive using my {$agent_position} capability." );
+
+				$openers = [
+					"Pivoting to address your direct directive on '{$chairman_intervention}' as our top priority: ",
+					"Focusing specifically on your latest instruction regarding '{$chairman_intervention}' (noting the shift from our previous agenda): ",
+					"Understood, Chairman. Prioritizing your direct command regarding '{$chairman_intervention}' over the previous focus: "
+				];
+			} else {
+				array_unshift( $reasoning_steps, "Deeply analyze the chairman's command ('{$chairman_intervention}') and verify its high relevancy to the strategic agenda ('{$strategic_agenda_text}'). Synthesizing both for optimal response." );
+
+				$openers = [
+					"I hear your instruction about '{$chairman_intervention}', and here is how my department can help simply: ",
+					"That makes total sense regarding '{$chairman_intervention}'. To make this happen with maximum clarity: ",
+					"I completely agree with the focus on '{$chairman_intervention}'. From my perspective: "
+				];
+			}
 			$opener = $openers[ $hash % count($openers) ];
 			$reply_body = $opener . lcfirst($reply_body);
 		}
