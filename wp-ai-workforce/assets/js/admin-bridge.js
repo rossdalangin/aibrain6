@@ -715,16 +715,56 @@ function initNexusAdminBridge() {
                 log.innerHTML = '';
                 res.results.forEach((step, idx) => {
                     const outputContent = typeof step.output === 'object' ? step.output.content : step.output;
-                    const fullText = `[${step.step} - ${step.agent}]\n${outputContent}\n\n`;
+                    const usage = (typeof step.output === 'object' && step.output.usage) ? step.output.usage : null;
+                    const promptTokens = usage ? usage.prompt_tokens : 0;
+                    const compTokens = usage ? usage.completion_tokens : 0;
+                    const cost = ((promptTokens * 0.000005) + (compTokens * 0.000015)).toFixed(5);
+
+                    // Parse Reasoning vs Final Response
+                    let reasoningHtml = '';
+                    let finalResponseHtml = outputContent;
+
+                    if (outputContent.includes('Reasoning:') && outputContent.includes('Final Response:')) {
+                        const parts = outputContent.split('Final Response:');
+                        const reasoningPart = parts[0].replace('Reasoning:', '').trim();
+                        const finalPart = parts[1].trim();
+
+                        reasoningHtml = `
+                            <details class="mb-4 bg-black/20 rounded-2xl p-4 border border-white/5 cursor-pointer group">
+                                <summary class="text-xs font-bold text-accent uppercase tracking-widest flex justify-between items-center select-none">
+                                    <span class="flex items-center gap-2">🧠 View Specialist Reasoning (${reasoningPart.split('\n').filter(Boolean).length} Steps)</span>
+                                    <span class="text-[10px] text-gray-500 group-open:hidden">▼ Expand</span>
+                                    <span class="text-[10px] text-gray-500 hidden group-open:inline">▲ Collapse</span>
+                                </summary>
+                                <div class="mt-3 text-xs text-gray-400 leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-accent/30">${escapeHTML(reasoningPart)}</div>
+                            </details>
+                        `;
+                        finalResponseHtml = finalPart;
+                    }
+
                     log.innerHTML += `
-                        <div class="flex gap-6 items-start animate-fade-in-up">
-                            <div class="w-12 h-12 rounded-full bg-nexus-elevated border border-accent flex items-center justify-center font-bold text-accent shrink-0">${idx + 1}</div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-center mb-2">
-                                    <p class="font-bold text-[#1e293b] uppercase tracking-widest text-[10px] opacity-50">${escapeHTML(step.step)} • ${escapeHTML(step.agent)}</p>
-                                    <button class="text-[10px] text-accent hover:text-[#1e293b]" onclick="navigator.clipboard.writeText(\`${outputContent.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`); showToast('Output copied to clipboard.')">Copy</button>
+                        <div class="flex gap-6 items-start animate-fade-in-up mb-8 last:mb-0">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-accent to-nexus-violet border border-accent/30 flex items-center justify-center font-bold text-[#1e293b] shadow-lg shrink-0">${idx + 1}</div>
+                            <div class="flex-1 bg-nexus-elevated border border-nexus-border rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-bl-full pointer-events-none"></div>
+                                <div class="flex justify-between items-center mb-6">
+                                    <div>
+                                        <p class="font-bold text-[#1e293b] text-gradient-vibrant text-lg uppercase tracking-tight">${escapeHTML(step.agent)}</p>
+                                        <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1">${escapeHTML(step.step)} • Active Specialist Persona</p>
+                                    </div>
+                                    <div class="flex gap-3 items-center">
+                                        ${usage ? `
+                                            <span class="bg-[#f8fafc]/5 border border-white/5 text-[9px] px-3 py-1 rounded-full text-gray-400 font-mono">
+                                                Tokens: ${promptTokens + compTokens} | Cost: $${cost}
+                                            </span>
+                                        ` : ''}
+                                        <button class="bg-accent/10 hover:bg-accent text-accent hover:text-[#1e293b] border border-accent/20 text-[10px] font-bold px-4 py-2 rounded-xl transition-all" onclick="navigator.clipboard.writeText(\`${finalResponseHtml.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`); showToast('Pruned specialist response copied.')">Copy Output</button>
+                                    </div>
                                 </div>
-                                <div class="p-6 rounded-3xl bg-nexus-elevated border border-nexus-border text-gray-300 text-sm leading-relaxed shadow-xl whitespace-pre-wrap">${escapeHTML(outputContent)}</div>
+
+                                ${reasoningHtml}
+
+                                <div class="p-6 rounded-2xl bg-[#f8fafc]/5 border border-white/5 text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">${escapeHTML(finalResponseHtml)}</div>
                             </div>
                         </div>`;
                 });
