@@ -20,6 +20,7 @@ class UsageLogRepository {
 
 	public function log_usage( array $data ): int {
 		global $wpdb;
+		$suppressed = $wpdb->suppress_errors( true );
 		$wpdb->insert( $this->table_name, [
 			'user_id'           => get_current_user_id(),
 			'employee_id'       => $data['employee_id'] ?? 0,
@@ -28,7 +29,9 @@ class UsageLogRepository {
 			'completion_tokens' => $data['completion_tokens'] ?? 0,
 			'cost'              => $data['cost'] ?? 0.0,
 		] );
-		return (int) $wpdb->insert_id;
+		$id = (int) $wpdb->insert_id;
+		$wpdb->suppress_errors( $suppressed );
+		return $id;
 	}
 
 	public function get_recent_usage( int $limit = 50 ): array {

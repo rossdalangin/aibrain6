@@ -14,6 +14,7 @@ class AuditLogger {
 	public function log( string $action, string $description, int $agent_id = 0, array $metadata = [] ): void {
 		global $wpdb;
 
+		$suppressed = $wpdb->suppress_errors( true );
 		$wpdb->insert( $wpdb->prefix . 'ai_audit_logs', [
 			'user_id'     => get_current_user_id(),
 			'action_type' => $action,
@@ -23,5 +24,6 @@ class AuditLogger {
 			'ip_address'  => $_SERVER['REMOTE_ADDR'] ?? '',
 			'created_at'  => current_time( 'mysql' ),
 		] );
+		$wpdb->suppress_errors( $suppressed );
 	}
 }
